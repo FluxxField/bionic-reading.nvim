@@ -74,37 +74,38 @@ function P.toggle(opts)
 	end
 end
 
-vim.api.nvim_create_user_command("BSRead", function(opts)
+vim.api.nvim_create_user_command("BRRead", function(opts)
 	P.create(opts)
 end, {
 	range = 2,
 })
 
-vim.api.nvim_create_user_command("BSClear", function()
+vim.api.nvim_create_user_command("BRClear", function()
 	P.clear()
 end, {
 	range = 2,
 })
 
-vim.api.nvim_create_user_command("BSToggle", function(opts)
+vim.api.nvim_create_user_command("BRToggle", function(opts)
 	P.toggle(opts)
 end, {
 	range = 2,
 })
 
 function P.highlight()
-	if vim.o.backgroud == "dar" then
-		vim.api.nvim_set_hl(0, "BSPrefix", { default = true, fg = "#cdd6f4" })
-		vim.api.nvim_set_hl(0, "BSSeffix", { default = true, fg = "#6C7086" })
+	if vim.o.background == "dar" then
+		vim.api.nvim_set_hl(0, "BRPrefix", { default = true, fg = "#cdd6f4" })
+		vim.api.nvim_set_hl(0, "BRSeffix", { default = true, fg = "#6C7086" })
 	else
-		vim.api.nvim_set_hl(0, "BSPrefix", { default = true, fg = "#000000", bold = true })
-		vim.api.nvim_set_hl(0, "BSSeffix", { default = true, fg = "#4C4F69" })
+		vim.api.nvim_set_hl(0, "BRPrefix", { default = true, fg = "#000000", bold = true })
+		vim.api.nvim_set_hl(0, "BRSeffix", { default = true, fg = "#4C4F69" })
 	end
 end
 
 P.highlight()
 
 vim.api.nvim_create_autocmd("ColorScheme", {
+	group = vim.api.nvim_create_augroup("BRColorScheme", { clear = true }),
 	pattern = "*",
 	callback = function()
 		P.highlight()
