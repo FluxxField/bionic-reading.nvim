@@ -107,6 +107,6 @@ P.highlight()
 vim.api.nvim_create_autocmd("ColorScheme", {
 	pattern = "*",
 	callback = function()
-		M.highlight()
+		P.highlight()
 	end,
 })
