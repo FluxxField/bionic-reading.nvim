@@ -1,33 +1,35 @@
-local utils = require('bionic-reading.utils')
-local commands = require('bionic-reading.commands')
+local defaults = require('bionic-reading.defaults')
+local highlight = require('bionic-reading.highlight')
 
-local M = {}
+local M = { opts = {} }
 
-M.config = {
-  fileTypes = { 'text' },
-  updateInInsert = true,
-  hlGroupOptions = { link = 'Bold' },
-  hlValues = {
-    ['default'] = 0.4
-  }
-}
+local create_user_command = vim.api.nvim_create_user_command
 
-function M.setup(config)
-  -- config
-  utils.check_config(config)
-  M.config = vim.tbl_deep_extend('force', M.config, config or {})
+function M.check_opts(opts)
+  if not opts then
+    return
+  end
 
-  -- buffers
-  M.activeBuffers = {}
-
-  -- highlights
-  M.hlGroup = "BionicReadingHL"
-  M.namespace = vim.api.nvim_create_namespace('bionic-reading')
-  vim.api.nvim_set_hl(0, M.hlGroup, M.config.hlGroupOptions)
-
-  -- commands
-  commands.create_user_commands()
-  commands.create_autocmds()
+  if opts.fileTypes then
+    defaults.fileTypes = {}
+  end
 end
+
+function M.setup(opts)
+  -- config
+  M.check_opts(opts)
+  M.opts = setmetatable(opts or {}, { __index = M.opts })
+
+  highlight.insert_highlights(M.opts)
+  highlight.create_autocmds(M.opts)
+end
+
+create_user_command('BionicReadingUpdateInInsert', function()
+  if M.opts.updateInInsert then
+    M.opts.updateInInsert = false
+  else
+    M.opts.updateInInsert = true
+  end
+end, {})
 
 return M
