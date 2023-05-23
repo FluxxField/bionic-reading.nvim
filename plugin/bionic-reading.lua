@@ -75,13 +75,13 @@ function M.toggle(opts)
 	end
 end
 
-vim.api.nvim_create_user_command("BRRead", function(opts)
+vim.api.nvim_create_user_command("BRShow", function(opts)
 	M.create(opts)
 end, {
 	range = 2,
 })
 
-vim.api.nvim_create_user_command("BRClear", function()
+vim.api.nvim_create_user_command("BRHide", function()
 	M.clear()
 end, {
 	range = 2,
@@ -94,12 +94,12 @@ end, {
 })
 
 function M.highlight()
-	if vim.o.background == "dar" then
-		vim.api.nvim_set_hl(0, "BRMrefix", { default = true, fg = "#cdd6f4" })
-		vim.api.nvim_set_hl(0, "BRSeffix", { default = true, fg = "#6C7086" })
+	if vim.o.background == "dark" then
+		vim.api.nvim_set_hl(0, "BRPrefix", { default = true, fg = "#cdd6f4" })
+		vim.api.nvim_set_hl(0, "BRSuffix", { default = true, fg = "#6C7086" })
 	else
-		vim.api.nvim_set_hl(0, "BRMrefix", { default = true, fg = "#000000", bold = true })
-		vim.api.nvim_set_hl(0, "BRSeffix", { default = true, fg = "#4C4F69" })
+		vim.api.nvim_set_hl(0, "BRPrefix", { default = true, fg = "#000000", bold = true })
+		vim.api.nvim_set_hl(0, "BRSuffix", { default = true, fg = "#4C4F69" })
 	end
 end
 
