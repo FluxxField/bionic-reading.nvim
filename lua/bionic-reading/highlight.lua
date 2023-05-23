@@ -9,7 +9,7 @@ local namespace = vim.api.nvim_create_namespace('bionic-reading')
 local hlGroup = "BionicReadingHL"
 
 function M.insert_highlights(opts)
-  vim.api.nvim_set_hl(0, hlGroup, opts.hlGroupOptions)
+  vim.api.nvim_set_hl(0, hlGroup, opts.hlGroupOptions or {})
 end
 
 function M.clear()

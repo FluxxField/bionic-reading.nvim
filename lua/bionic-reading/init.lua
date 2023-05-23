@@ -5,20 +5,8 @@ local M = { opts = {} }
 
 local create_user_command = vim.api.nvim_create_user_command
 
-function M.check_opts(opts)
-  if not opts then
-    return
-  end
-
-  if opts.fileTypes then
-    defaults.fileTypes = {}
-  end
-end
-
 function M.setup(opts)
-  -- config
-  M.check_opts(opts)
-  M.opts = setmetatable(opts or {}, { __index = M.opts })
+  M.opts = setmetatable(opts or {}, { __index = defaults })
 
   highlight.insert_highlights(M.opts)
   highlight.create_autocmds(M.opts)
