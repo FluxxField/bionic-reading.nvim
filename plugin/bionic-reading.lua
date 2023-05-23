@@ -66,7 +66,7 @@ function M.clear()
 end
 
 function M.toggle(opts)
-	M.enabled = not P.enabled
+	M.enabled = not M.enabled
 
 	if M.enabled then
 		M.create(opts)
