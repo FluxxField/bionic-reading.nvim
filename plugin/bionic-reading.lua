@@ -1,20 +1,21 @@
-local P = { enabled = false }
-local ns_id = vim.api.nvim_create_namespace("bionic-reading")
+local M = { enabled = false }
+local namespace = "bionic-reading"
+local ns_id = vim.api.nvim_create_namespace(namespace)
 
 vim.g.flow_strength = vim.g.flow_strength or 0.7
 
-function P.create(opts)
+function M.create(opts)
 	local line_start = 0
 	local line_end = vim.api.nvim.buf_line_count(0)
 
-	P.enabled = true
+	M.enabled = true
 
 	if opts and opts.range == 2 then
 		line_start = vim.api.nvim_buf_get_mark(0, "<")[1] - 1
 		line_end = vim.api.nvim_buf_get_mark(0, ">")[1]
 	end
 
-	local lines = vim.api.nvim_buf_get_lines(0, line_start, line_end, false)
+	local lines = vim.api.nvim_buf_get_lines(0, line_start, line_end, true)
 	local index = line_start - 1
 
 	for _, line in pairs(lines) do
@@ -35,7 +36,7 @@ function P.create(opts)
 
 			if st then
 				if j == line_length then
-					if re == line_length then
+					if re then
 						j = j + 1
 						re = nil
 					end
@@ -45,7 +46,7 @@ function P.create(opts)
 					local en = j - 1
 
 					vim.api.nvim_buf_set_extmark(0, ns_id, index, st - 1, {
-						hl_group = "BRSuffix",
+						hl_group = "BRPrefix",
 						end_col = math.floor(st + math.min((en - st) / 2, (en - st) * vim.g.flow_strength)),
 					})
 
@@ -58,56 +59,56 @@ function P.create(opts)
 	end
 end
 
-function P.clear()
-	P.enabled = false
+function M.clear()
+	M.enabled = false
 	vim.api.nvim_buf_clear_namespace(0, ns_id, 0, -1)
-	ns_id = vim.api.nvim_create_namespace("bionic-reading")
+	ns_id = vim.api.nvim_create_namespace(namespace)
 end
 
-function P.toggle(opts)
-	P.enabled = not P.enabled
+function M.toggle(opts)
+	M.enabled = not P.enabled
 
-	if P.enabled then
-		P.create(opts)
+	if M.enabled then
+		M.create(opts)
 	else
-		P.clear()
+		M.clear()
 	end
 end
 
 vim.api.nvim_create_user_command("BRRead", function(opts)
-	P.create(opts)
+	M.create(opts)
 end, {
 	range = 2,
 })
 
 vim.api.nvim_create_user_command("BRClear", function()
-	P.clear()
+	M.clear()
 end, {
 	range = 2,
 })
 
 vim.api.nvim_create_user_command("BRToggle", function(opts)
-	P.toggle(opts)
+	M.toggle(opts)
 end, {
 	range = 2,
 })
 
-function P.highlight()
+function M.highlight()
 	if vim.o.background == "dar" then
-		vim.api.nvim_set_hl(0, "BRPrefix", { default = true, fg = "#cdd6f4" })
+		vim.api.nvim_set_hl(0, "BRMrefix", { default = true, fg = "#cdd6f4" })
 		vim.api.nvim_set_hl(0, "BRSeffix", { default = true, fg = "#6C7086" })
 	else
-		vim.api.nvim_set_hl(0, "BRPrefix", { default = true, fg = "#000000", bold = true })
+		vim.api.nvim_set_hl(0, "BRMrefix", { default = true, fg = "#000000", bold = true })
 		vim.api.nvim_set_hl(0, "BRSeffix", { default = true, fg = "#4C4F69" })
 	end
 end
 
-P.highlight()
+M.highlight()
 
 vim.api.nvim_create_autocmd("ColorScheme", {
 	group = vim.api.nvim_create_augroup("BRColorScheme", { clear = true }),
 	pattern = "*",
 	callback = function()
-		P.highlight()
+		M.highlight()
 	end,
 })
