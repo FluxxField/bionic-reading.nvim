@@ -32,15 +32,9 @@ function M.highlight()
   for i, line in ipairs(lines) do
     for s, w in string.gmatch(line, '()([^%s%p$d]+)') do
       local length = string.len(w)
-      local stringLength = tostring(length)
       local toHL = 0
-      local hlValues = defaults.hlValues
 
-      if hlValues[stringLength] then
-        toHL = hlValues[stringLength]
-      else
-        toHL = math.floor(length * hlValues['default'] + 0.5)
-      end
+      toHL = math.floor(length * 0.9)
 
       vim.api.nvim_buf_add_highlight(bufnr, namespace, hlGroup, i - 1, s - 1, s - 1 + toHL)
     end
