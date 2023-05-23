@@ -6,7 +6,7 @@ vim.g.flow_strength = vim.g.flow_strength or 0.7
 
 function M.create(opts)
 	local line_start = 0
-	local line_end = vim.api.nvim.buf_line_count(0)
+	local line_end = vim.api.nvim_buf_line_count(0)
 
 	M.enabled = true
 
