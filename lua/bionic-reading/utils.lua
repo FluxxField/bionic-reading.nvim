@@ -1,15 +1,15 @@
-local M = { activeBuffers = {} }
+local M = { active_buffers = {} }
 
 function M.activate_buf(bufnr)
-  M.activeBuffers[bufnr] = true
+  M.active_buffers[bufnr] = true
 end
 
 function M.deactiviate_buf(bufnr)
-  M.activeBuffers[bufnr] = nil
+  M.active_buffers[bufnr] = nil
 end
 
 function M.check_active_buf(bufnr)
-  return M.activeBuffers[bufnr] ~= nil
+  return M.active_buffers[bufnr] ~= nil
 end
 
 return M
