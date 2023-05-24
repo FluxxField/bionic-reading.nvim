@@ -2,6 +2,8 @@
 
 Toggable bionic reading in Neovim.
 
+![demo gif](assets/bionic-reading-demo.mp4)
+
 ## Features
  - Custom highlighting amounts (hl_offsets) and highlighting style (hl_group_value)
  - Toggable update while in insert mode (Default on)
