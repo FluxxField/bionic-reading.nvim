@@ -83,14 +83,37 @@ This represents how much of the word to highlight as a percentage. For example 0
 
 - `hl_group_value`
 
+```lua
+hl_group_value = {
+  link = "Bold",
+},
+```
+
 This table is used as the value passed to `nvim_set_hl()` as the `{val}` parameter.
 Please see `:help nvim_set_hl()` for details
 
+The highlight group created is called `BionicReadingHL`
+
+By default the highlight group is linked to the highlight group `Bold`
+
+NOTE -
+- If your current font does not have bold version, the highlighting will not work by default
+  since all it does is bold the first few characters
+- If you use link, no other properties will be used
+
 - `file_types`
+
+```lua
+file_types = { 'text' },
+```
 
 This is a table of file types that bionic-reading with highlight
 
 - `update_in_insert`
+
+```lua
+update_in_insert = true,
+```
 
 Flag used to dictate wether or not to update in insert mode
 
