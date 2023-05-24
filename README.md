@@ -45,7 +45,7 @@ If you are happy with the default options, simply call `setup`
 
 Config options and what they do
 
-- Default Values 
+### Default 
 ```lua
 {
   file_types = { 'text' },
@@ -63,7 +63,7 @@ Config options and what they do
 }
 ```
 
- - `hl_offsets`
+### hl_offsets
 
 ```lua
 hl_offsets = {
@@ -81,7 +81,7 @@ And word lengths no explicitly defined default to 0.4 (unless overridden). Value
 This represents how much of the word to highlight as a percentage. For example 0.3 highlights 30% of the word,
 0.4 highlights 40%, ect.
 
-- `hl_group_value`
+### hl_group_value
 
 ```lua
 hl_group_value = {
@@ -96,12 +96,21 @@ The highlight group created is called `BionicReadingHL`
 
 By default the highlight group is linked to the highlight group `Bold`
 
-NOTE -
+NOTE
 - If your current font does not have bold version, the highlighting will not work by default
   since all it does is bold the first few characters
-- If you use link, no other properties will be used
+- If you use the link property, no other properties will be used
 
-- `file_types`
+```lua
+-- Example: Makes background 'red', and text 'blue' & bold
+hl_group_value = {
+  bg: 'red',
+  fg: 'blue',
+  bold = true,
+},
+```
+
+### file_types
 
 ```lua
 file_types = { 'text' },
@@ -109,7 +118,7 @@ file_types = { 'text' },
 
 This is a table of file types that bionic-reading with highlight
 
-- `update_in_insert`
+### update_in_insert
 
 ```lua
 update_in_insert = true,
