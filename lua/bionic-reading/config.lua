@@ -3,10 +3,10 @@ local M = {}
 local defaults = {
   file_types = { 'text' },
   update_in_insert = true,
-  hl_group_options = {
+  hl_group_value = {
     link = "Bold",
   },
-  hl_values = {
+  hl_offsets = {
     ['1'] = 1,
     ['2'] = 1,
     ['3'] = 2,

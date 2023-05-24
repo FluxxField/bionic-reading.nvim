@@ -16,7 +16,7 @@ function M.insert_highlights()
     return
   end
 
-  vim.api.nvim_set_hl(0, M.hl_group, config.options.hl_group_options)
+  vim.api.nvim_set_hl(0, M.hl_group, config.options.hl_group_value)
 end
 
 function M.clear()
@@ -40,17 +40,19 @@ function M.highlight()
     for word_index, word in string.gmatch(line, '()([^%s%p%d]+)') do
       local word_length = string.len(word)
       local word_length_str = tostring(word_length)
-      local toHl = 0
+      local hl_end = 0
 
-      if config.options.hl_values[word_length_str] then
-        toHl = config.options.hl_values[word_length_str]
+      local hl_offset = config.options.hl_offsets[word_length_str]
+
+      if hl_offset then
+        hl_end = hl_offset
       else
-        toHl = math.floor(word_length * config.options.hl_values['default'] + 0.5)
+        hl_end = math.floor(word_length * config.options.hl_offsets['default'] + 0.5)
       end
 
       local line_start = line_index - 1
       local col_start = word_index - 1
-      local col_end = word_index - 1 + toHl
+      local col_end = word_index - 1 + hl_end
 
       vim.api.nvim_buf_add_highlight(bufnr, M.namespace, M.hl_group, line_start, col_start, col_end)
     end
@@ -129,9 +131,5 @@ function M.create_user_commands()
     end
   end, {})
 end
-
-M.insert_highlights()
-M.create_autocmds()
-M.create_user_commands()
 
 return M
