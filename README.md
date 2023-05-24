@@ -3,9 +3,11 @@
 Toggable bionic reading in Neovim.
 
 ## Features
- - Custom highlighting amounts (hl_offsets) and style (hl_group_value)
- - Will update while in insert mode (Default on)
- - Default file types ('Text')
+ - Custom highlighting amounts (hl_offsets) and highlighting style (hl_group_value)
+ - Toggable update while in insert mode (Default on)
+ - File types restricted ('text')
+ - Highlighting stays after colorscheme changes
+ - Automatic highlighting of files when opened 
 
 ## Installation
 
@@ -202,9 +204,13 @@ create_autocmd('TextChangedI', {
 })
 ```
 
+## Insperation
+
+Thank you to JellyApple102 and nullchilly for foundation. Because of them I was able create my own plugin with help and insperation from them
+
+[easyread.nvim](https://github.com/JellyApple102/easyread.nvim)
+[fsread.nvim](https://github.com/nullchilly/fsread.nvim)
+
 ## PLEASE NOTE
 
-This is a simple plugin that I am using as a way to learn Vim, Lua and how to make NVIM plugins. Any tips/tricks/help would be appriciated.
-
-Thank you,
-FluxxField
+This plugin was created with the purpose to learn Nvim, lua, and how to create a plugin. This is not a new idea. See Insperation above
