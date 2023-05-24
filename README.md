@@ -209,6 +209,7 @@ create_autocmd('TextChangedI', {
 Thank you to JellyApple102 and nullchilly for foundation. Because of them I was able create my own plugin with help and insperation from them
 
 [easyread.nvim](https://github.com/JellyApple102/easyread.nvim)
+
 [fsread.nvim](https://github.com/nullchilly/fsread.nvim)
 
 ## PLEASE NOTE
