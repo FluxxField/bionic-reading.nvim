@@ -1,15 +1,18 @@
-local M = { active_buffers = {} }
+local config = require("bionic-reading.config")
 
-function M.activate_buf(bufnr)
-  M.active_buffers[bufnr] = true
-end
+local M = {}
 
-function M.deactiviate_buf(bufnr)
-  M.active_buffers[bufnr] = nil
-end
+function M.check_file_types()
+  local correct_file_type = false
 
-function M.check_active_buf(bufnr)
-  return M.active_buffers[bufnr] ~= nil
+  for _, file_type in ipairs(config.options.file_types) do
+    if vim.bo.filetype == file_type then
+      correct_file_type = true
+      break
+    end
+  end
+
+  return correct_file_type
 end
 
 return M
