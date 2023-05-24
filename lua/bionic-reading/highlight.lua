@@ -92,7 +92,7 @@ create_autocmd('FileType', {
   end,
 })
 
-create_autocmd({ 'InsertLeave', 'TextChanged' }, {
+create_autocmd('TextChanged', {
   pattern = '*',
   group = group,
   callback = function(args)

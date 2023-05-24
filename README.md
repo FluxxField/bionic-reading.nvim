@@ -133,6 +133,75 @@ bionic-reading provides several user commands
 - `:BRToggle` toggles the current buffers highlighting
 - `:BRToggleUpdateInInsert` toggles the update_in_insert flag
 
+## Autocmds
+
+autocmd group name is `bionic_reading`
+
+Creates the `BionicReadingHL` highlight group on ColorScheme change
+
+```lua
+create_autocmd('ColorScheme', {
+  pattern = '*',
+  group = group,
+  callback = function()
+    vim.api.nvim_set_hl(0, M.hl_group, config.options.hl_group_value)
+  end
+})
+```
+
+Applies bionic reading highlighting on buffer open if the buffer is in file_types
+
+```lua
+create_autocmd('FileType', {
+  pattern = file_types,
+  group = group,
+  callback = function(args)
+    if M.check_active_buf(args.buf) then
+      return
+    end
+
+    M.highlight(0, -1)
+  end,
+})
+```
+
+Applies highlighting to buffer when text is changed. Grabs position of pasted code to highlight
+
+```lua
+create_autocmd('TextChanged', {
+  pattern = '*',
+  group = group,
+  callback = function(args)
+    if not M.check_active_buf(args.buf) or not require('bionic-reading.utils').check_file_types() then
+      return
+    end
+
+    local line_start = vim.fn.getpos("'[")[2] - 1
+    local line_end = vim.fn.getpos("']")[2]
+
+    M.highlight(line_start, line_end)
+  end,
+})
+```
+
+Applies highlighting to current line while in insert mode
+
+```lua
+create_autocmd('TextChangedI', {
+  pattern = '*',
+  group = group,
+  callback = function(args)
+    if not M.check_active_buf(args.buf) or not config.options.update_in_insert or not require('bionic-reading.utils').check_file_types() then
+      return
+    end
+
+    local line_start = vim.api.nvim_win_get_cursor(0)[1]
+
+    M.highlight(line_start - 1, line_start)
+  end
+})
+```
+
 ## PLEASE NOTE
 
 This is a simple plugin that I am using as a way to learn Vim, Lua and how to make NVIM plugins. Any tips/tricks/help would be appriciated.
