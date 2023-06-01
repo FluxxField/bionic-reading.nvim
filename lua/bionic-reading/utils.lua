@@ -1,11 +1,11 @@
-local config = require("bionic-reading.config")
+local Config = require("bionic-reading.config")
 
-local M = {}
+local Utils = {}
 
-function M.check_file_types()
+function Utils.check_file_types()
   local correct_file_type = false
 
-  for _, file_type in ipairs(config.options.file_types) do
+  for _, file_type in ipairs(Config.file_types) do
     if vim.bo.filetype == file_type then
       correct_file_type = true
       break
@@ -15,4 +15,4 @@ function M.check_file_types()
   return correct_file_type
 end
 
-return M
+return Utils
