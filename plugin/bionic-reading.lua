@@ -94,13 +94,8 @@ end, {
 })
 
 function M.highlight()
-	if vim.o.background == "dark" then
-		vim.api.nvim_set_hl(0, "BRPrefix", { default = true, fg = "#cdd6f4" })
-		vim.api.nvim_set_hl(0, "BRSuffix", { default = true, fg = "#6C7086" })
-	else
-		vim.api.nvim_set_hl(0, "BRPrefix", { default = true, fg = "#000000", bold = true })
-		vim.api.nvim_set_hl(0, "BRSuffix", { default = true, fg = "#4C4F69" })
-	end
+	vim.api.nvim_set_hl(0, "BRPrefix", { bold = true })
+	vim.api.nvim_set_hl(0, "BRSuffix", { default = true })
 end
 
 M.highlight()
