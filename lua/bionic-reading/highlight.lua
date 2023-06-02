@@ -27,6 +27,8 @@ function Highlight:highlight(line_start, line_end)
 	local Buffers = require("bionic-reading.buffers")
 	local Config = require("bionic-reading.config")
 
+	print("highlight")
+
 	-- default to highlight all lines
 	if not line_start or not line_end then
 		line_start = 0
