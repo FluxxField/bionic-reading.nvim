@@ -26,4 +26,38 @@ function Config._setup(opts)
 	})
 end
 
+function Config._update_file_types(value)
+	Config.opts.file_types = vim.tble_extend("keep", value, Config.opts.file_types)
+
+	vim.validate({
+		file_types = { Config.opts.file_types, "table" },
+	})
+end
+
+function Config._update(key, value)
+	local notify = require("bionic-reading.utils")
+
+	if Config.opts[key] == nil then
+		local content = "Invalid key: " .. key
+
+		notify(content, "warn", content)
+	end
+
+	if type(key) == "table" then
+		if type(value) ~= "table" then
+			local content = "Value must be a table"
+
+			notify(content, "warn", content)
+		end
+
+		Config.opts[key] = vim.tbl_deep_extend("keep", value, Config.opts[key])
+	else
+		Config.opts[key] = value
+	end
+
+	vim.validate({
+		key = { Config.opts[key], type(Config.opts[key]) },
+	})
+end
+
 return Config
