@@ -4,6 +4,22 @@ Toggable and customizable bionic reading for Neovim!
 
 ![demo gif](assets/bionic-reading-demo.gif)
 
+## Requirements
+
+In order for the default styling to work, you will need to make sure your terminal and fonts allow for bold text.
+The default styling just bolds the text. So, if your terminal is not showing bold text, it will look like the plugin
+does not work
+
+iTerm2:
+```
+iTerm2 -> Settings... -> Profiles -> Text -> Text Rendering -> enable "Draw bold text in bold font"
+```
+
+Terminal:
+```
+Terminal -> Settings... -> Profiles -> Text -> enable "Use bold fonts"
+```
+
 ## Features
  - No dependencies!
  - Custom highlighting amounts and highlighting style
