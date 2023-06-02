@@ -1,17 +1,18 @@
 # bionic-reading.nvim
 
-Toggable bionic reading in Neovim.
+Toggable and customizable bionic reading for Neovim!
 
 ![demo gif](assets/bionic-reading-demo.gif)
 
 ## Features
+ - No dependencies!
  - Custom highlighting amounts (hl_offsets) and highlighting style (hl_group_value)
  - Toggable update while in insert mode (Default on)
- - File types restricted ('text')
+ - File types restricted (Default 'text')
  - Highlighting stays after colorscheme changes
- - *NEW*: Toggable auto highlighting of files when opened 
- - *NEW*: (optional) Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications 
- - *NEW*: Prompted to highlight file temporarily if file type is not in config
+ - *NEW*: Toggable auto highlighting of files when opened (Default on) 
+ - *NEW*: (optional) Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications if available 
+ - *NEW*: Now prompts to highlight file if file type is not in your config
 
 ## Installation
 
@@ -90,7 +91,7 @@ Please see [Autocmds](#Autocmds) below for more info
 file_types = { 'text' },
 ```
 
-This is a table of file types that bionic-reading with highlight
+This is a table of file types that bionic-reading will highlight automatically if enabled
 
 ### hl_group_value
 
@@ -146,6 +147,8 @@ update_in_insert_mode = true,
 ```
 
 Flag used to dictate whether or not to update in insert mode
+
+Please see [Autocmds](#Autocmds) below for more info
 
 ## Commands
 

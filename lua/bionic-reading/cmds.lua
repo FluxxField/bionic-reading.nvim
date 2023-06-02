@@ -86,8 +86,7 @@ function CMDS:_setup()
 		local bufnr = get_current_buf()
 
 		if not Utils.check_file_types() then
-			local input =
-					vim.fn.input("Would you like to temporarily add the current file type to your config? (y/n): ")
+			local input = vim.fn.input("Would you like to highlight the current file type? (y/n): ")
 
 			if not Utils.prompt_answer(input) then
 				Utils.notify(
