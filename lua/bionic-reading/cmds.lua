@@ -21,13 +21,14 @@ function CMDS:_setup()
 		end,
 	})
 
-	create_autocmd("FileType", {
+	create_autocmd({ "FileType", "BufEnter" }, {
 		pattern = "*",
 		group = self.group,
 		callback = function(args)
 			local Buffers = require("bionic-reading.buffers")
+			local Config = require("bionic-reading.config")
 
-			if Buffers:check_active_buf(args.buf) or not Utils.check_file_types() then
+			if Buffers:check_active_buf(args.buf) or not Utils.check_file_types() or not Config.opts.auto_highlight then
 				return
 			end
 
@@ -61,9 +62,9 @@ function CMDS:_setup()
 			local Buffers = require("bionic-reading.buffers")
 
 			if
-				not Buffers:check_active_buf(args.buf)
-				or not Config.opts.update_in_insert
-				or not Utils.check_file_types()
+					not Buffers:check_active_buf(args.buf)
+					or not Config.opts.update_in_insert
+					or not Utils.check_file_types()
 			then
 				return
 			end
@@ -83,7 +84,7 @@ function CMDS:_setup()
 
 		if not Utils.check_file_types() then
 			local input =
-				vim.fn.input("Would you like to temporarily add the current file type to your config? (y/n): ")
+					vim.fn.input("Would you like to temporarily add the current file type to your config? (y/n): ")
 
 			if not Utils.prompt_answer(input) then
 				Utils.notify(
@@ -106,10 +107,26 @@ function CMDS:_setup()
 		end
 	end, {})
 
-	create_user_command("BRToggleUpdateInInsert", function()
+	create_user_command("BRToggleUpdateInsertMode", function()
 		local Config = require("bionic-reading.config")
+		local new_value = not Config.opts.update_in_insert_mode
 
-		Config._update("update_in_insert", not Config.opts.update_in_insert)
+		local success = Config._update("update_in_insert_mode", new_value)
+
+		if success then
+			Utils.notify("Update while in insert mode is now " .. (new_value and "enabled" or "disabled"), "info")
+		end
+	end, {})
+
+	create_user_command("BRToggleAutoHighlight", function()
+		local Config = require("bionic-reading.config")
+		local new_value = not Config.opts.auto_highlight
+
+		local success = Config._update("auto_highlight", new_value)
+
+		if success then
+			Utils.notify("Auto highlight is now " .. (new_value and "enabled" or "disabled"), "info")
+		end
 	end, {})
 end
 
