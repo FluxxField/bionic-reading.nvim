@@ -1,8 +1,7 @@
-local Config = require("bionic-reading.config")
-
 local Utils = {}
 
 function Utils.check_file_types()
+	local Config = require("bionic-reading.config")
 	local correct_file_type = false
 
 	for _, file_type in ipairs(Config.opts.file_types) do
@@ -13,6 +12,27 @@ function Utils.check_file_types()
 	end
 
 	return correct_file_type
+end
+
+function Utils.notify(content, type, fallback)
+	local has_notify, notify = pcall(require, "notify")
+	local title = "Bionic Reading"
+
+	if has_notify then
+		notify.notify(content, type, {
+			title = title,
+		})
+	elseif fallback then
+		print(title .. ": " .. fallback)
+	end
+end
+
+function Utils.prompt_answer(input)
+	if input == "y" or input == "Y" or input == "Yes" or input == "YES" then
+		return true
+	end
+
+	return false
 end
 
 return Utils

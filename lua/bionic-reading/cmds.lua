@@ -1,4 +1,3 @@
-local has_notify, notify = pcall(require, "notify")
 local Highlight = require("bionic-reading.highlight")
 local Utils = require("bionic-reading.utils")
 
@@ -11,28 +10,25 @@ local CMDS = {
 }
 
 function CMDS:_setup()
-	local Config = require("bionic-reading.config")
-	local Buffers = require("bionic-reading.buffers")
-	local file_types = Config.opts.file_types
-
-	if vim.tbl_isempty(file_types) then
-		file_types = { "*" }
-	end
-
 	-- autocmds
 	create_autocmd("ColorScheme", {
 		pattern = "*",
 		group = self.group,
 		callback = function()
+			local Config = require("bionic-reading.config")
+
 			vim.api.nvim_set_hl(0, Highlight.hl_group, Config.opts.hl_group_value)
 		end,
 	})
 
-	create_autocmd("FileType", {
-		pattern = file_types,
+	create_autocmd({ "FileType", "BufEnter" }, {
+		pattern = "*",
 		group = self.group,
 		callback = function(args)
-			if Buffers:check_active_buf(args.buf) then
+			local Buffers = require("bionic-reading.buffers")
+			local Config = require("bionic-reading.config")
+
+			if Buffers:check_active_buf(args.buf) or not Utils.check_file_types() or not Config.opts.auto_highlight then
 				return
 			end
 
@@ -44,6 +40,8 @@ function CMDS:_setup()
 		pattern = "*",
 		group = self.group,
 		callback = function(args)
+			local Buffers = require("bionic-reading.buffers")
+
 			if not Buffers:check_active_buf(args.buf) or not Utils.check_file_types() then
 				return
 			end
@@ -60,6 +58,9 @@ function CMDS:_setup()
 		pattern = "*",
 		group = self.group,
 		callback = function(args)
+			local Config = require("bionic-reading.config")
+			local Buffers = require("bionic-reading.buffers")
+
 			if
 					not Buffers:check_active_buf(args.buf)
 					or not Config.opts.update_in_insert
@@ -77,28 +78,27 @@ function CMDS:_setup()
 
 	-- user commands
 	create_user_command("BRToggle", function()
+		local Config = require("bionic-reading.config")
+		local Buffers = require("bionic-reading.buffers")
 		local bufnr = get_current_buf()
+
 		if not Utils.check_file_types() then
-			if has_notify then
-				notify.notify(
+			local input =
+					vim.fn.input("Would you like to temporarily add the current file type to your config? (y/n): ")
+
+			if not Utils.prompt_answer(input) then
+				Utils.notify(
 					"Cannot highlight current buffer.\nPlease add file type to your config if you would like to",
-					"error",
-					{
-						title = "BionicReading",
-					}
+					"error"
 				)
+
+				return
 			else
-				print("BionicReading: Cannot highlight current buffer. Please add file type to config")
+				Config._update("file_types", { vim.bo.filetype })
 			end
-
-			return
 		end
 
-		if has_notify then
-			notify.notify("bionic-reading toggled", "info", {
-				title = "BionicReading",
-			})
-		end
+		Utils.notify("BionicReading toggled", "info")
 
 		if Buffers:check_active_buf(bufnr) then
 			Highlight:clear()
@@ -107,11 +107,25 @@ function CMDS:_setup()
 		end
 	end, {})
 
-	create_user_command("BRToggleUpdateInInsert", function()
-		if Config.opts.update_in_insert then
-			Config.opts.update_in_insert = false
-		else
-			Config.opts.update_in_insert = true
+	create_user_command("BRToggleUpdateInsertMode", function()
+		local Config = require("bionic-reading.config")
+		local new_value = not Config.opts.update_in_insert_mode
+
+		local success = Config._update("update_in_insert_mode", new_value)
+
+		if success then
+			Utils.notify("Update while in insert mode is now " .. (new_value and "enabled" or "disabled"), "info")
+		end
+	end, {})
+
+	create_user_command("BRToggleAutoHighlight", function()
+		local Config = require("bionic-reading.config")
+		local new_value = not Config.opts.auto_highlight
+
+		local success = Config._update("auto_highlight", new_value)
+
+		if success then
+			Utils.notify("Auto highlight is now " .. (new_value and "enabled" or "disabled"), "info")
 		end
 	end, {})
 end
