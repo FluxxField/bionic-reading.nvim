@@ -187,7 +187,7 @@ autocmd group name is `bionic_reading`. Creates the `BionicReadingHL` highlight 
 Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 
 - `ColorScheme` - Applies bionic reading highlighting on buffer open if the buffer is in file_types
-- `FileType, BufEnter` - Applies highlighting to buffer when the file type changes or the buffer is entered 
+- `FileType` - Applies highlighting to buffer when the file type changes or the buffer is entered 
 - `TextChanged` - Applies highlight to buf when the text changes (past and delete)
 - `TextChangedI` - Applies highlighting to current line while in insert mode
 
