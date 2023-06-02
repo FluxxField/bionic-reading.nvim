@@ -3,11 +3,17 @@ local Buffers = require("bionic-reading.buffers")
 
 local api = vim.api
 
+--- Highlight class
+--- @class Highlight
+--- @field namespace number
+--- @field hl_group string
 local Highlight = {
 	namespace = api.nvim_create_namespace("bionic_reading"),
 	hl_group = "BionicReadingHL",
 }
 
+--- Clear all highlights in current buffer by clearing namespace
+--- @return nil
 function Highlight:clear()
 	local bufnr = api.nvim_get_current_buf()
 
@@ -15,6 +21,10 @@ function Highlight:clear()
 	api.nvim_buf_clear_namespace(bufnr, self.namespace, 0, -1)
 end
 
+--- Highlight lines in current buffer
+--- @param line_start number
+--- @param line_end number
+--- @return nil
 function Highlight:highlight(line_start, line_end)
 	-- default to highlight all lines
 	if not line_start or not line_end then
