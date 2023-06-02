@@ -39,6 +39,7 @@ function Config._setup(opts)
 		file_types = { Config.opts.file_types, "table" },
 		hl_group_value = { Config.opts.hl_group_value, "table" },
 		hl_offsets = { Config.opts.hl_offsets, "table" },
+		prompt_user = { Config.opts.prompt_user, "boolean" },
 		update_in_insert_mode = { Config.opts.update_in_insert_mode, "boolean" },
 	})
 end
