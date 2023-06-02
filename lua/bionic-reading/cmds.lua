@@ -5,12 +5,16 @@ local create_user_command = vim.api.nvim_create_user_command
 local get_current_buf = vim.api.nvim_get_current_buf
 local create_autocmd = vim.api.nvim_create_autocmd
 
+--- Commands class
+--- @class CMDS
+--- @field group number
 local CMDS = {
 	group = vim.api.nvim_create_augroup("bionic_reading", { clear = true }),
 }
 
+--- Setup commands
+--- @return nil
 function CMDS:_setup()
-	-- autocmds
 	create_autocmd("ColorScheme", {
 		pattern = "*",
 		group = self.group,
@@ -62,9 +66,9 @@ function CMDS:_setup()
 			local Buffers = require("bionic-reading.buffers")
 
 			if
-					not Buffers:check_active_buf(args.buf)
-					or not Config.opts.update_in_insert
-					or not Utils.check_file_types()
+				not Buffers:check_active_buf(args.buf)
+				or not Config.opts.update_in_insert
+				or not Utils.check_file_types()
 			then
 				return
 			end
@@ -76,7 +80,6 @@ function CMDS:_setup()
 		end,
 	})
 
-	-- user commands
 	create_user_command("BRToggle", function()
 		local Config = require("bionic-reading.config")
 		local Buffers = require("bionic-reading.buffers")
@@ -84,7 +87,7 @@ function CMDS:_setup()
 
 		if not Utils.check_file_types() then
 			local input =
-					vim.fn.input("Would you like to temporarily add the current file type to your config? (y/n): ")
+				vim.fn.input("Would you like to temporarily add the current file type to your config? (y/n): ")
 
 			if not Utils.prompt_answer(input) then
 				Utils.notify(

@@ -1,5 +1,15 @@
+--- Config module for bionic-reading.nvim
+--- @module Config
+--- @usage local Config = require("bionic-reading.config")
 local Config = {}
 
+--- Default configuration options
+--- @class defaults
+--- @field auto_highlight (boolean) Enable/disable auto-highlighting
+--- @field file_types (table) File types to enable auto-highlighting
+--- @field hl_group_value (table) Highlight group value
+--- @field hl_offsets (table) Highlight offsets
+--- @field update_in_insert_mode (boolean) Enable/disable updating in insert mode
 local defaults = {
 	auto_highlight = true,
 	file_types = { "text" },
@@ -16,6 +26,9 @@ local defaults = {
 	update_in_insert_mode = true,
 }
 
+--- Setup bionic-reading.nvim configuration
+--- @param opts table
+--- @return nil
 function Config._setup(opts)
 	Config.opts = vim.tbl_deep_extend("keep", opts or {}, defaults)
 
@@ -28,6 +41,10 @@ function Config._setup(opts)
 	})
 end
 
+--- Update bionic-reading.nvim configuration
+--- @param key string|table
+--- @param value any
+--- @return boolean
 function Config._update(key, value)
 	local Utils = require("bionic-reading.utils")
 

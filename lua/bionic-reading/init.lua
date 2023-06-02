@@ -1,6 +1,9 @@
 local M = {}
 local initialized = false
 
+--- Setup bionic-reading.nvim
+--- @param opts table
+--- @return nil
 function M.setup(opts)
 	if initialized then
 		return
