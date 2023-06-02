@@ -9,9 +9,9 @@ Toggable bionic reading in Neovim.
  - Toggable update while in insert mode (Default on)
  - File types restricted ('text')
  - Highlighting stays after colorscheme changes
- - *NEW* Toggable auto highlighting of files when opened 
- - *NEW* (optional) Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications 
- - *NEW* Prompted to highlight file temporarily if file type is not in config
+ - *NEW*: Toggable auto highlighting of files when opened 
+ - *NEW*: (optional) Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications 
+ - *NEW*: Prompted to highlight file temporarily if file type is not in config
 
 ## Installation
 
@@ -35,8 +35,9 @@ use {
 
 ## Configuration
 
-If you are happy with the default options, simply call `setup`
-Please see configuration and default options code [here](bionic-reading.nvim/lua/bionic-reading/config.lua)
+If you are happy with the default options, simply call `setup`.
+
+Please see configuration and default options code [here](lua/bionic-reading/config.lua)
 
 ```lua
 -- example using lazy.nvim
@@ -50,8 +51,9 @@ Please see configuration and default options code [here](bionic-reading.nvim/lua
 
 ## Options
 
-Config options and what they do
-Please see configuration and default options code [here](bionic-reading.nvim/lua/bionic-reading/config.lua)
+Config options and what they do.
+
+Please see configuration and default options code [here](lua/bionic-reading/config.lua)
 
 ### Default 
 ```lua
@@ -80,7 +82,7 @@ auto_highlight = true,
 
 A flag used to control if a file is automatically highlighted on `FileType` or `BufEnter`.
 
-See Autocmds below for more info
+Please see [Autocmds](##Autocmds) below for more info
 
 ### file_types
 
@@ -148,7 +150,7 @@ Flag used to dictate whether or not to update in insert mode
 ## Commands
 
 bionic-reading provides several user commands
-Please see autocmd code [here](bionic-reading.nvim/lua/bionic-reading/cmds.lua)
+Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 
 - `:BRToggle` toggles the current buffers highlighting, will prompt to highlight current file
   if the file is not in configs
@@ -158,7 +160,7 @@ Please see autocmd code [here](bionic-reading.nvim/lua/bionic-reading/cmds.lua)
 ## Autocmds
 
 autocmd group name is `bionic_reading`. Creates the `BionicReadingHL` highlight group on ColorScheme change
-Please see autocmd code [here](bionic-reading.nvim/lua/bionic-reading/cmds.lua)
+Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 
 - `ColorScheme` - Applies bionic reading highlighting on buffer open if the buffer is in file_types
 - `FileType, BufEnter` - Applies highlighting to buffer when the file type changes or the buffer is entered 
