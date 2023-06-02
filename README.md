@@ -14,6 +14,15 @@ Toggable and customizable bionic reading for Neovim!
  - *NEW*: (optional) Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications if available 
  - *NEW*: Now prompts to highlight file if file type is not in your config
 
+## TODO
+- [x] Add ability to toggle auto highlighting
+- [x] Add support for nvim-notify
+- [x] Prompt user to highlight file IF file type is not in config
+- [ ] Add ability to toggle user prompt
+- [ ] investigate treesitter highlighting
+- [ ] ????
+- [ ] profit
+
 ## Installation
 
 Install your favorite package manager.
@@ -81,7 +90,7 @@ Please see configuration and default options code [here](lua/bionic-reading/conf
 auto_highlight = true,
 ```
 
-A flag used to control if a file is automatically highlighted on `FileType` or `BufEnter`.
+A flag used to control if a file is automatically highlighted on `FileType` and `BufEnter`.
 
 Please see [Autocmds](#Autocmds) below for more info
 
@@ -152,7 +161,8 @@ Please see [Autocmds](#Autocmds) below for more info
 
 ## Commands
 
-bionic-reading provides several user commands
+bionic-reading provides several user commands.
+
 Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 
 - `:BRToggle` toggles the current buffers highlighting, will prompt to highlight current file
@@ -162,7 +172,8 @@ Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 
 ## Autocmds
 
-autocmd group name is `bionic_reading`. Creates the `BionicReadingHL` highlight group on ColorScheme change
+autocmd group name is `bionic_reading`. Creates the `BionicReadingHL` highlight group on ColorScheme change.
+
 Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 
 - `ColorScheme` - Applies bionic reading highlighting on buffer open if the buffer is in file_types
