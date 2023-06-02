@@ -82,7 +82,7 @@ auto_highlight = true,
 
 A flag used to control if a file is automatically highlighted on `FileType` or `BufEnter`.
 
-Please see [Autocmds](##Autocmds) below for more info
+Please see [Autocmds](#Autocmds) below for more info
 
 ### file_types
 
