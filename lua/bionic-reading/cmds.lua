@@ -66,9 +66,9 @@ function CMDS:_setup()
 			local Buffers = require("bionic-reading.buffers")
 
 			if
-				not Buffers:check_active_buf(args.buf)
-				or not Config.opts.update_in_insert
-				or not Utils.check_file_types()
+					not Buffers:check_active_buf(args.buf)
+					or not Config.opts.update_in_insert
+					or not Utils.check_file_types()
 			then
 				return
 			end
@@ -86,8 +86,7 @@ function CMDS:_setup()
 		local bufnr = get_current_buf()
 
 		if not Utils.check_file_types() then
-			local input =
-				vim.fn.input("Would you like to temporarily add the current file type to your config? (y/n): ")
+			local input = vim.fn.input("Would you like to highlight the current file type? (y/n): ")
 
 			if not Utils.prompt_answer(input) then
 				Utils.notify(

@@ -1,16 +1,27 @@
 # bionic-reading.nvim
 
-Toggable bionic reading in Neovim.
+Toggable and customizable bionic reading for Neovim!
 
 ![demo gif](assets/bionic-reading-demo.gif)
 
 ## Features
+ - No dependencies!
  - Custom highlighting amounts (hl_offsets) and highlighting style (hl_group_value)
  - Toggable update while in insert mode (Default on)
- - File types restricted ('text')
+ - File types restricted (Default 'text')
  - Highlighting stays after colorscheme changes
- - Automatic highlighting of files when opened 
- - (optional) Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for messages
+ - *NEW*: Toggable auto highlighting of files when opened (Default on) 
+ - *NEW*: (optional) Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications if available 
+ - *NEW*: Now prompts to highlight file if file type is not in your config
+
+## TODO
+- [x] Add ability to toggle auto highlighting
+- [x] Add support for nvim-notify
+- [x] Prompt user to highlight file IF file type is not in config
+- [ ] Add ability to toggle user prompt
+- [ ] investigate treesitter highlighting
+- [ ] ????
+- [ ] profit
 
 ## Installation
 
@@ -34,7 +45,9 @@ use {
 
 ## Configuration
 
-If you are happy with the default options, simply call `setup`
+If you are happy with the default options, simply call `setup`.
+
+Please see configuration and default options code [here](lua/bionic-reading/config.lua)
 
 ```lua
 -- example using lazy.nvim
@@ -48,13 +61,15 @@ If you are happy with the default options, simply call `setup`
 
 ## Options
 
-Config options and what they do
+Config options and what they do.
+
+Please see configuration and default options code [here](lua/bionic-reading/config.lua)
 
 ### Default 
 ```lua
 {
+  auto_highlight = true,
   file_types = { 'text' },
-  update_in_insert = true,
   hl_group_value = {
     link = "Bold",
   },
@@ -64,27 +79,28 @@ Config options and what they do
     ['3'] = 2,
     ['4'] = 2,
     ['default'] = 0.4,
-  }
+  },
+  update_in_insert_mode = true,
 }
 ```
 
-### hl_offsets
+### auto_highlight
 
 ```lua
-hl_offsets = {
-  ['1'] = 1,
-  ['2'] = 1,
-  ['3'] = 2,
-  ['4'] = 2,
-  ['default'] = 0.4,
-}
+auto_highlight = true,
 ```
 
-This table is used to determin the number of characters of a word to highlight based on length.
+A flag used to control if a file is automatically highlighted on `FileType` and `BufEnter`.
 
-And word lengths no explicitly defined default to 0.4 (unless overridden). Value must be between 0 and 1.
-This represents how much of the word to highlight as a percentage. For example 0.3 highlights 30% of the word,
-0.4 highlights 40%, ect.
+Please see [Autocmds](#Autocmds) below for more info
+
+### file_types
+
+```lua
+file_types = { 'text' },
+```
+
+This is a table of file types that bionic-reading will highlight automatically if enabled
 
 ### hl_group_value
 
@@ -115,97 +131,55 @@ hl_group_value = {
 },
 ```
 
-### file_types
+### hl_offsets
 
 ```lua
-file_types = { 'text' },
+hl_offsets = {
+  ['1'] = 1,
+  ['2'] = 1,
+  ['3'] = 2,
+  ['4'] = 2,
+  ['default'] = 0.4,
+}
 ```
 
-This is a table of file types that bionic-reading with highlight
+This table is used to determine the number of characters of a word to highlight based on length.
 
-### update_in_insert
+And word lengths no explicitly defined default to 0.4 (unless overridden). Value must be between 0 and 1.
+This represents how much of the word to highlight as a percentage. For example 0.3 highlights 30% of the word,
+0.4 highlights 40%, etc.
+
+### update_in_insert_mode
 
 ```lua
-update_in_insert = true,
+update_in_insert_mode = true,
 ```
 
-Flag used to dictate wether or not to update in insert mode
+Flag used to dictate whether or not to update in insert mode
+
+Please see [Autocmds](#Autocmds) below for more info
 
 ## Commands
 
-bionic-reading provides several user commands
+bionic-reading provides several user commands.
 
-- `:BRToggle` toggles the current buffers highlighting
-- `:BRToggleUpdateInInsert` toggles the update_in_insert flag
+Please see autocmd code [here](lua/bionic-reading/cmds.lua)
+
+- `:BRToggle` toggles the current buffers highlighting, will prompt to highlight current file
+  if the file is not in configs
+- `:BRToggleUpdateInsertMode` toggles the update_in_insert_mode flag
+- `:BRToggleAutoHighlight` toggles the auto_highlight flag
 
 ## Autocmds
 
-autocmd group name is `bionic_reading`
+autocmd group name is `bionic_reading`. Creates the `BionicReadingHL` highlight group on ColorScheme change.
 
-Creates the `BionicReadingHL` highlight group on ColorScheme change
+Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 
-```lua
-create_autocmd('ColorScheme', {
-  pattern = '*',
-  group = group,
-  callback = function()
-    vim.api.nvim_set_hl(0, M.hl_group, config.options.hl_group_value)
-  end
-})
-```
-
-Applies bionic reading highlighting on buffer open if the buffer is in file_types
-
-```lua
-create_autocmd('FileType', {
-  pattern = file_types,
-  group = group,
-  callback = function(args)
-    if M.check_active_buf(args.buf) then
-      return
-    end
-
-    M.highlight(0, -1)
-  end,
-})
-```
-
-Applies highlighting to buffer when text is changed. Grabs position of pasted code to highlight
-
-```lua
-create_autocmd('TextChanged', {
-  pattern = '*',
-  group = group,
-  callback = function(args)
-    if not M.check_active_buf(args.buf) or not require('bionic-reading.utils').check_file_types() then
-      return
-    end
-
-    local line_start = vim.fn.getpos("'[")[2] - 1
-    local line_end = vim.fn.getpos("']")[2]
-
-    M.highlight(line_start, line_end)
-  end,
-})
-```
-
-Applies highlighting to current line while in insert mode
-
-```lua
-create_autocmd('TextChangedI', {
-  pattern = '*',
-  group = group,
-  callback = function(args)
-    if not M.check_active_buf(args.buf) or not config.options.update_in_insert or not require('bionic-reading.utils').check_file_types() then
-      return
-    end
-
-    local line_start = vim.api.nvim_win_get_cursor(0)[1]
-
-    M.highlight(line_start - 1, line_start)
-  end
-})
-```
+- `ColorScheme` - Applies bionic reading highlighting on buffer open if the buffer is in file_types
+- `FileType, BufEnter` - Applies highlighting to buffer when the file type changes or the buffer is entered 
+- `TextChanged` - Applies highlight to buf when the text changes (past and delete)
+- `TextChangedI` - Applies highlighting to current line while in insert mode
 
 ## Insperation
 
