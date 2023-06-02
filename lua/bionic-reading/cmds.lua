@@ -1,4 +1,3 @@
-local has_notify, notify = pcall(require, "notify")
 local Highlight = require("bionic-reading.highlight")
 local Utils = require("bionic-reading.utils")
 
@@ -61,9 +60,9 @@ function CMDS:_setup()
 		group = self.group,
 		callback = function(args)
 			if
-					not Buffers:check_active_buf(args.buf)
-					or not Config.opts.update_in_insert
-					or not Utils.check_file_types()
+				not Buffers:check_active_buf(args.buf)
+				or not Config.opts.update_in_insert
+				or not Utils.check_file_types()
 			then
 				return
 			end
@@ -79,26 +78,16 @@ function CMDS:_setup()
 	create_user_command("BRToggle", function()
 		local bufnr = get_current_buf()
 		if not Utils.check_file_types() then
-			if has_notify then
-				notify.notify(
-					"Cannot highlight current buffer.\nPlease add file type to your config if you would like to",
-					"error",
-					{
-						title = "BionicReading",
-					}
-				)
-			else
-				print("BionicReading: Cannot highlight current buffer. Please add file type to config")
-			end
+			Utils.notify(
+				"Cannot highlight current buffer.\nPlease add file type to your config if you would like to",
+				"error",
+				"Error: cannot highlight current buffer"
+			)
 
 			return
 		end
 
-		if has_notify then
-			notify.notify("bionic-reading toggled", "info", {
-				title = "BionicReading",
-			})
-		end
+		Utils.notify("BionicReading toggled", "info")
 
 		if Buffers:check_active_buf(bufnr) then
 			Highlight:clear()

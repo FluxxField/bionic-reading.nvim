@@ -15,4 +15,17 @@ function Utils.check_file_types()
 	return correct_file_type
 end
 
+function Utils.notify(content, type, fallback)
+	local has_notify, notify = pcall(require, "notify")
+	local title = "Bionic Reading"
+
+	if has_notify then
+		notify.notify(content, type, {
+			title = title,
+		})
+	elseif fallback then
+		print(title .. ": " .. fallback)
+	end
+end
+
 return Utils
