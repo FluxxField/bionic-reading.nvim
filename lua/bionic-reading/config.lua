@@ -15,23 +15,15 @@ local defaults = {
 	},
 }
 
-print("bionic_reading config")
-
-local function init()
-	local bionic_reading = require("bionic-reading")
-
-	Config = vim.tbl_deep_extend("keep", bionic_reading._config or {}, defaults)
+function Config._setup(opts)
+	Config.opts = vim.tbl_deep_extend("keep", opts or {}, defaults)
 
 	vim.validate({
-		file_types = { Config.file_types, "table" },
-		update_in_insert = { Config.update_in_insert, "boolean" },
-		hl_group_value = { Config.hl_group_value, "table" },
-		hl_offsets = { Config.hl_offsets, "table" },
+		file_types = { Config.opts.file_types, "table" },
+		update_in_insert = { Config.opts.update_in_insert, "boolean" },
+		hl_group_value = { Config.opts.hl_group_value, "table" },
+		hl_offsets = { Config.opts.hl_offsets, "table" },
 	})
-
-	bionic_reading._config = nil
 end
-
-init()
 
 return Config

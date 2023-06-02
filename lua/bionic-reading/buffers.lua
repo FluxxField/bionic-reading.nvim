@@ -1,17 +1,17 @@
 local Buffers = {
-  active = {},
+	active = {},
 }
 
 function Buffers:activate_buf(bufnr)
-  self.active[bufnr] = true
+	self.active[bufnr] = true
 end
 
 function Buffers:deactivate_buf(bufnr)
-  self.active[bufnr] = nil
+	self.active[bufnr] = nil
 end
 
 function Buffers:check_active_buf(bufnr)
-  return self.active[bufnr] ~= nil
+	return self.active[bufnr] ~= nil
 end
 
 return Buffers

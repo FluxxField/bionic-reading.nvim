@@ -1,28 +1,20 @@
 local Config = require("bionic-reading.config")
 local Buffers = require("bionic-reading.buffers")
 
-local get_current_buf = vim.api.nvim_get_current_buf
+local api = vim.api
 
 local Highlight = {
-	namespace = vim.api.nvim_create_namespace("bionic_reading"),
+	namespace = api.nvim_create_namespace("bionic_reading"),
 	hl_group = "BionicReadingHL",
 }
 
 function Highlight:clear()
-	local bufnr = get_current_buf()
+	local bufnr = api.nvim_get_current_buf()
 
-	Buffers.deactiviate_buf(bufnr)
-	vim.api.nvim_buf_clear_namespace(bufnr, self.namespace, 0, -1)
+	Buffers:deactivate_buf(bufnr)
+	api.nvim_buf_clear_namespace(bufnr, self.namespace, 0, -1)
 end
 
--- highlight
--- Highlights words in the current buffer, dictated by line_start and line_end
---
--- @param line_start number
--- @param line_end number
--- @return void
---
--- TODO: refactor to account for col_start/end? Instead of just line
 function Highlight:highlight(line_start, line_end)
 	-- default to highlight all lines
 	if not line_start or not line_end then
@@ -30,12 +22,12 @@ function Highlight:highlight(line_start, line_end)
 		line_end = -1
 	end
 
-	local bufnr = get_current_buf()
+	local bufnr = api.nvim_get_current_buf()
 
 	Buffers:activate_buf(bufnr)
 
 	-- zero based indexing, end is exclusive
-	local lines = vim.api.nvim_buf_get_lines(bufnr, line_start, line_end, false)
+	local lines = api.nvim_buf_get_lines(bufnr, line_start, line_end, false)
 
 	-- iterate over lines and words and highlight
 	for line_index, line in ipairs(lines) do
@@ -45,12 +37,12 @@ function Highlight:highlight(line_start, line_end)
 			local hl_end = 0
 
 			-- offset tells us how many characters to highlight
-			local hl_offset = Config.hl_offsets[word_length_str]
+			local hl_offset = Config.opts.hl_offsets[word_length_str]
 
 			if hl_offset then
 				hl_end = hl_offset
 			else
-				hl_end = math.floor(word_length * Config.hl_offsets["default"] + 0.5)
+				hl_end = math.floor(word_length * Config.opts.hl_offsets["default"] + 0.5)
 			end
 
 			-- cannot just use line_index because line_start is not always 0, zero based indexing
@@ -59,7 +51,7 @@ function Highlight:highlight(line_start, line_end)
 			local col_end = col_start + hl_end
 
 			-- Applies highlight to the word, zero based indexing
-			vim.api.nvim_buf_add_highlight(bufnr, self.namespace, self.hl_group, line_to_hl, col_start, col_end)
+			api.nvim_buf_add_highlight(bufnr, self.namespace, self.hl_group, line_to_hl, col_start, col_end)
 		end
 	end
 end
