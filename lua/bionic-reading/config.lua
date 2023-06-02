@@ -9,6 +9,7 @@ local Config = {}
 --- @field file_types (table) File types to enable auto-highlighting
 --- @field hl_group_value (table) Highlight group value
 --- @field hl_offsets (table) Highlight offsets
+--- @field prompt_user (boolean) Enable/disable prompting user
 --- @field update_in_insert_mode (boolean) Enable/disable updating in insert mode
 local defaults = {
 	auto_highlight = true,
@@ -23,6 +24,7 @@ local defaults = {
 		["4"] = 2,
 		["default"] = 0.4,
 	},
+	prompt_user = true,
 	update_in_insert_mode = true,
 }
 
@@ -37,6 +39,7 @@ function Config._setup(opts)
 		file_types = { Config.opts.file_types, "table" },
 		hl_group_value = { Config.opts.hl_group_value, "table" },
 		hl_offsets = { Config.opts.hl_offsets, "table" },
+		prompt_user = { Config.opts.prompt_user, "boolean" },
 		update_in_insert_mode = { Config.opts.update_in_insert_mode, "boolean" },
 	})
 end

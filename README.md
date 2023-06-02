@@ -6,19 +6,20 @@ Toggable and customizable bionic reading for Neovim!
 
 ## Features
  - No dependencies!
- - Custom highlighting amounts (hl_offsets) and highlighting style (hl_group_value)
- - Toggable update while in insert mode (Default on)
- - File types restricted (Default 'text')
+ - Custom highlighting amounts and highlighting style
+ - Toggable update while in insert mode
+ - File types restricted
  - Highlighting stays after colorscheme changes
- - *NEW*: Toggable auto highlighting of files when opened (Default on) 
- - *NEW*: (optional) Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications if available 
+ - *NEW*: Toggable auto highlighting of files when opened 
+ - *NEW*: Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications if available 
  - *NEW*: Now prompts to highlight file if file type is not in your config
+ - *NEW*: Can enable/disable prompting ^
 
 ## TODO
 - [x] Add ability to toggle auto highlighting
 - [x] Add support for nvim-notify
 - [x] Prompt user to highlight file IF file type is not in config
-- [ ] Add ability to toggle user prompt
+- [x] Add ability to toggle user prompt
 - [ ] investigate treesitter highlighting
 - [ ] ????
 - [ ] profit
@@ -80,6 +81,7 @@ Please see configuration and default options code [here](lua/bionic-reading/conf
     ['4'] = 2,
     ['default'] = 0.4,
   },
+  prompt_user = true,
   update_in_insert_mode = true,
 }
 ```
@@ -148,6 +150,14 @@ This table is used to determine the number of characters of a word to highlight 
 And word lengths no explicitly defined default to 0.4 (unless overridden). Value must be between 0 and 1.
 This represents how much of the word to highlight as a percentage. For example 0.3 highlights 30% of the word,
 0.4 highlights 40%, etc.
+
+### prompt_user
+
+```lua
+prompt_user = true,
+```
+
+Flag used to dictate if the user is prompted when attempting to highlight a file not in `file_types`
 
 ### update_in_insert_mode
 
