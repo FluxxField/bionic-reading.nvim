@@ -25,13 +25,14 @@ function CMDS:_setup()
 		end,
 	})
 
-	create_autocmd({ "FileType", "BufEnter" }, {
+	create_autocmd("FileType", {
 		pattern = "*",
 		group = self.group,
 		callback = function(args)
 			local Buffers = require("bionic-reading.buffers")
 			local Config = require("bionic-reading.config")
 
+			-- if buffer is active, we have already highlighted the file
 			if Buffers:check_active_buf(args.buf) or not Utils.check_file_types() or not Config.opts.auto_highlight then
 				return
 			end
@@ -66,9 +67,9 @@ function CMDS:_setup()
 			local Buffers = require("bionic-reading.buffers")
 
 			if
-				not Buffers:check_active_buf(args.buf)
-				or not Config.opts.update_in_insert
-				or not Utils.check_file_types()
+					not Buffers:check_active_buf(args.buf)
+					or not Config.opts.update_in_insert_mode
+					or not Utils.check_file_types()
 			then
 				return
 			end
@@ -104,11 +105,11 @@ function CMDS:_setup()
 			end
 		end
 
-		Utils.notify("BionicReading toggled", "info")
-
 		if Buffers:check_active_buf(bufnr) then
+			Utils.notify("BionicReading disabled", "info")
 			Highlight:clear()
 		else
+			Utils.notify("BionicReading enabled", "info")
 			Highlight:highlight(0, -1)
 		end
 	end, {})
