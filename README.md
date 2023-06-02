@@ -6,7 +6,9 @@ Toggable and customizable bionic reading for Neovim!
 
 ## Requirements
 
-In order for the default styling to work, you will need to make sure your terminal and fonts allow for bold text
+In order for the default styling to work, you will need to make sure your terminal and fonts allow for bold text.
+The default styling just bolds the text. So, if your terminal is not showing bold text, it will look like the plugin
+does not work
 
 iTerm2:
 ```
