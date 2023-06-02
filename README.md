@@ -10,6 +10,7 @@ Toggable bionic reading in Neovim.
  - File types restricted ('text')
  - Highlighting stays after colorscheme changes
  - Automatic highlighting of files when opened 
+ - (optional) Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for messages
 
 ## Installation
 
