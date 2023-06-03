@@ -25,6 +25,7 @@ local defaults = {
 		["default"] = 0.4,
 	},
 	prompt_user = true,
+	saccade_cadence = 1,
 	update_in_insert_mode = true,
 }
 
@@ -32,11 +33,17 @@ local defaults = {
 --- @param opts table
 --- @return nil
 function Config._setup(opts)
-	Config.opts = vim.tbl_deep_extend("force", opts or {}, defaults)
+	local hl_group_value = opts.hl_group_value
+
+	opts.hl_group_value = nil
+
+	Config.opts = vim.tbl_deep_extend("keep", opts or {}, defaults)
 
 	-- explicitly set the highlight group value to make sure link is not kept
 	-- link overrides everything
-	Config.opts.hl_group_value = opts.hl_group_value
+	if type(hl_group_value) == "table" then
+		Config.opts.hl_group_value = hl_group_value
+	end
 
 	vim.validate({
 		auto_highlight = { Config.opts.auto_highlight, "boolean" },
@@ -44,6 +51,7 @@ function Config._setup(opts)
 		hl_group_value = { Config.opts.hl_group_value, "table" },
 		hl_offsets = { Config.opts.hl_offsets, "table" },
 		prompt_user = { Config.opts.prompt_user, "boolean" },
+		saccade_cadence = { Config.opts.saccade_cadence, "number" },
 		update_in_insert_mode = { Config.opts.update_in_insert_mode, "boolean" },
 	})
 end
@@ -72,7 +80,7 @@ function Config._update(key, value)
 			return false
 		end
 
-		Config.opts[key] = vim.tbl_deep_extend("force", value, Config.opts[key])
+		Config.opts[key] = vim.tbl_deep_extend("keep", value, Config.opts[key])
 	else
 		Config.opts[key] = value
 	end
