@@ -36,9 +36,11 @@ Terminal -> Settings... -> Profiles -> Text -> enable "Use bold fonts"
 - [x] Add support for nvim-notify
 - [x] Prompt user to highlight file IF file type is not in config
 - [x] Add ability to toggle user prompt
-- [ ] investigate treesitter highlighting
+- [ ] Investigate treesitter highlighting
+- [ ] Add saccade cadence
+- [ ] Add syllable algorithm
 - [ ] ????
-- [ ] profit
+- [ ] Profit (Disclosure: meme)
 
 ## Installation
 
