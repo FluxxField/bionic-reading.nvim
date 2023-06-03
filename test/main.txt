@@ -1,0 +1,9 @@
+--- Clear all highlights in current buffer by clearing namespace
+--- @return nil
+function Highlight:clear()
+	local Buffers = require("bionic-reading.buffers")
+	local bufnr = api.nvim_get_current_buf()
+
+	Buffers:deactivate_buf(bufnr)
+	api.nvim_buf_clear_namespace(bufnr, self.namespace, 0, -1)
+end
