@@ -22,12 +22,12 @@ end
 --- Highlight lines in current buffer
 --- @param line_start number
 --- @param line_end number
+--- @param override boolean @clear all highlights before highlighting
 --- @return nil
-function Highlight:highlight(line_start, line_end)
+function Highlight:highlight(line_start, line_end, override)
 	local Buffers = require("bionic-reading.buffers")
 	local Config = require("bionic-reading.config")
-
-	print("highlight")
+	local saccade_cadence = Config.opts.saccade_cadence
 
 	-- default to highlight all lines
 	if not line_start or not line_end then
@@ -37,14 +37,29 @@ function Highlight:highlight(line_start, line_end)
 
 	local bufnr = api.nvim_get_current_buf()
 
-	Buffers:activate_buf(bufnr)
+	-- clear all highlighting, used for saccade_cadence
+	-- NOTE: Could we clear highlighting by character instead of clearing all?
+	if override then
+		Highlight:clear()
+	elseif not override then
+		Buffers:activate_buf(bufnr)
+	end
 
 	-- zero based indexing, end is exclusive
 	local lines = api.nvim_buf_get_lines(bufnr, line_start, line_end, false)
+	local saccade_count = 0
 
 	-- iterate over lines and words and highlight
 	for line_index, line in ipairs(lines) do
 		for word_index, word in string.gmatch(line, "()([^%s%p%d]+)") do
+			saccade_count = saccade_count + 1
+
+			if saccade_count ~= saccade_cadence then
+				goto continue
+			elseif saccade_count == saccade_cadence then
+				saccade_count = 0
+			end
+
 			local word_length = string.len(word)
 			local word_length_str = tostring(word_length)
 			local hl_end = 0
@@ -65,6 +80,8 @@ function Highlight:highlight(line_start, line_end)
 
 			-- Applies highlight to the word, zero based indexing
 			api.nvim_buf_add_highlight(bufnr, self.namespace, self.hl_group, line_to_hl, col_start, col_end)
+
+			::continue::
 		end
 	end
 end
