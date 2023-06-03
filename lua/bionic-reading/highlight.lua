@@ -22,6 +22,7 @@ end
 --- Highlight lines in current buffer
 --- @param line_start number
 --- @param line_end number
+--- @param override boolean @clear all highlights before highlighting
 --- @return nil
 function Highlight:highlight(line_start, line_end, override)
 	local Buffers = require("bionic-reading.buffers")
@@ -36,6 +37,8 @@ function Highlight:highlight(line_start, line_end, override)
 
 	local bufnr = api.nvim_get_current_buf()
 
+	-- clear all highlighting, used for saccade_cadence
+	-- NOTE: Could we clear highlighting by character instead of clearing all?
 	if override then
 		Highlight:clear()
 	elseif not override then
