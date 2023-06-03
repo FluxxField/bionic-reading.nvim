@@ -26,11 +26,12 @@ Terminal -> Settings... -> Profiles -> Text -> enable "Use bold fonts"
  - Toggable update while in insert mode
  - File types restricted
  - Highlighting stays after colorscheme changes
- - *NEW*: Toggable auto highlighting of files when opened 
- - *NEW*: Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications if available 
- - *NEW*: Now prompts to highlight file if file type is not in your config
- - *NEW*: Can enable/disable prompting ^
+ - Toggable auto highlighting of files when opened 
+ - Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications if available 
+ - Now prompts to highlight file if file type is not in your config
+ - Can enable/disable prompting ^
  - *NEW*: Added saccade_cadence to control how often words are highlighted
+ - *NEW*: Added user command to set saccade_cadence
 
 ## TODO
 - [x] Add ability to toggle auto highlighting
@@ -39,7 +40,9 @@ Terminal -> Settings... -> Profiles -> Text -> enable "Use bold fonts"
 - [x] Add ability to toggle user prompt
 - [ ] Investigate treesitter highlighting
 - [x] Add saccade cadence
+- [x] Add user command to set saccade cadence
 - [ ] Add syllable algorithm
+- [ ] Expose highlight and clear
 - [ ] ????
 - [ ] Profit (Disclosure: meme)
 
@@ -208,6 +211,7 @@ Please see autocmd code [here](lua/bionic-reading/cmds.lua)
   if the file is not in configs
 - `:BRToggleUpdateInsertMode` toggles the update_in_insert_mode flag
 - `:BRToggleAutoHighlight` toggles the auto_highlight flag
+- `:BRSaccadeCadence {num}` used to set saccade_cadence outside of the config
 
 ## Autocmds
 
