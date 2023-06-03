@@ -30,6 +30,7 @@ Terminal -> Settings... -> Profiles -> Text -> enable "Use bold fonts"
  - *NEW*: Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications if available 
  - *NEW*: Now prompts to highlight file if file type is not in your config
  - *NEW*: Can enable/disable prompting ^
+ - *NEW*: Added saccade_cadence to control how often words are highlighted
 
 ## TODO
 - [x] Add ability to toggle auto highlighting
@@ -37,7 +38,7 @@ Terminal -> Settings... -> Profiles -> Text -> enable "Use bold fonts"
 - [x] Prompt user to highlight file IF file type is not in config
 - [x] Add ability to toggle user prompt
 - [ ] Investigate treesitter highlighting
-- [ ] Add saccade cadence
+- [x] Add saccade cadence
 - [ ] Add syllable algorithm
 - [ ] ????
 - [ ] Profit (Disclosure: meme)
@@ -100,6 +101,7 @@ Please see configuration and default options code [here](lua/bionic-reading/conf
     ['default'] = 0.4,
   },
   prompt_user = true,
+	saccade_cadence = 1,
   update_in_insert_mode = true,
 }
 ```
@@ -176,6 +178,15 @@ prompt_user = true,
 ```
 
 Flag used to dictate if the user is prompted when attempting to highlight a file not in `file_types`
+
+### saccade_cadenc
+
+```
+saccade_cadence = 1,
+```
+
+Used to control how often a word is highlighted. A cadence of 1 means every word.
+A cadence of 2 means every other word. So on and so forth
 
 ### update_in_insert_mode
 
