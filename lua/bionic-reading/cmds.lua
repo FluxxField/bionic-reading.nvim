@@ -86,13 +86,16 @@ function CMDS:_setup()
 		local Buffers = require("bionic-reading.buffers")
 		local bufnr = get_current_buf()
 
+		-- check if file type is in config
 		if not Utils.check_file_types() then
 			local input = "n"
 
+			-- Prompt user if we can
 			if Config.opts.prompt_user then
 				input = vim.fn.input("Would you like to highlight the current file type? (y/n): ")
 			end
 
+			-- If user does not want to highlight current file type, return
 			if not Utils.prompt_answer(input) then
 				Utils.notify(
 					"Cannot highlight current buffer.\nPlease add file type to your config if you would like to",
@@ -101,6 +104,7 @@ function CMDS:_setup()
 
 				return
 			else
+				-- Add file type to config
 				Config._update("file_types", { vim.bo.filetype })
 			end
 		end
@@ -113,6 +117,24 @@ function CMDS:_setup()
 			Highlight:highlight(0, -1)
 		end
 	end, {})
+
+	create_user_command("BRSaccadeCadence", function(opts)
+		local Config = require("bionic-reading.config")
+		local new_value = tonumber(opts.fargs[1])
+
+		if not new_value then
+			Utils.notify("Invalid value", "error")
+
+			return
+		end
+
+		local success = Config._update("saccade_cadence", new_value)
+
+		if success then
+			Utils.notify("Saccade cadence is now " .. new_value, "info")
+			Highlight:highlight(0, -1, true)
+		end
+	end, { nargs = 1 })
 
 	create_user_command("BRToggleUpdateInsertMode", function()
 		local Config = require("bionic-reading.config")

@@ -23,7 +23,7 @@ end
 --- @param line_start number
 --- @param line_end number
 --- @return nil
-function Highlight:highlight(line_start, line_end)
+function Highlight:highlight(line_start, line_end, override)
 	local Buffers = require("bionic-reading.buffers")
 	local Config = require("bionic-reading.config")
 	local saccade_cadence = Config.opts.saccade_cadence
@@ -36,7 +36,11 @@ function Highlight:highlight(line_start, line_end)
 
 	local bufnr = api.nvim_get_current_buf()
 
-	Buffers:activate_buf(bufnr)
+	if override then
+		Highlight:clear()
+	elseif not override then
+		Buffers:activate_buf(bufnr)
+	end
 
 	-- zero based indexing, end is exclusive
 	local lines = api.nvim_buf_get_lines(bufnr, line_start, line_end, false)
