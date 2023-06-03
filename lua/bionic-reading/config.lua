@@ -32,11 +32,17 @@ local defaults = {
 --- @param opts table
 --- @return nil
 function Config._setup(opts)
+	local hl_group_value = opts.hl_group_value
+
+	opts.hl_group_value = nil
+
 	Config.opts = vim.tbl_deep_extend("force", opts or {}, defaults)
 
 	-- explicitly set the highlight group value to make sure link is not kept
 	-- link overrides everything
-	Config.opts.hl_group_value = opts.hl_group_value
+	if type(hl_group_value) == "table" then
+		Config.opts.hl_group_value = hl_group_value
+	end
 
 	vim.validate({
 		auto_highlight = { Config.opts.auto_highlight, "boolean" },
