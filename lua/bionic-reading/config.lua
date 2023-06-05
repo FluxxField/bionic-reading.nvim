@@ -10,7 +10,9 @@ local Config = {}
 --- @field hl_group_value (table) Highlight group value
 --- @field hl_offsets (table) Highlight offsets
 --- @field prompt_user (boolean) Enable/disable prompting user
+--- @field saccade_cadence (number) Saccade cadence
 --- @field update_in_insert_mode (boolean) Enable/disable updating in insert mode
+--- @field use_syllable_algorithm (boolean) Enable/disable syllable algorithm
 local defaults = {
 	auto_highlight = true,
 	file_types = { "text" },
@@ -27,6 +29,7 @@ local defaults = {
 	prompt_user = true,
 	saccade_cadence = 1,
 	update_in_insert_mode = true,
+	use_syllable_algorithm = true, -- BETA
 }
 
 --- Setup bionic-reading.nvim configuration
@@ -53,6 +56,7 @@ function Config._setup(opts)
 		prompt_user = { Config.opts.prompt_user, "boolean" },
 		saccade_cadence = { Config.opts.saccade_cadence, "number" },
 		update_in_insert_mode = { Config.opts.update_in_insert_mode, "boolean" },
+		use_syllable_algorithm = { Config.opts.use_syllable_algorithm, "boolean" },
 	})
 end
 
