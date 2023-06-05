@@ -1,3 +1,5 @@
+local Utils = require("bionic-reading.utils")
+
 local api = vim.api
 
 --- Highlight class
@@ -62,21 +64,27 @@ function Highlight:highlight(line_start, line_end, override)
 
 			local word_length = string.len(word)
 			local word_length_str = tostring(word_length)
-			local hl_end = 0
-
-			-- offset tells us how many characters to highlight
-			local hl_offset = Config.opts.hl_offsets[word_length_str]
-
-			if hl_offset then
-				hl_end = hl_offset
-			else
-				hl_end = math.floor(word_length * Config.opts.hl_offsets["default"] + 0.5)
-			end
-
 			-- cannot just use line_index because line_start is not always 0, zero based indexing
 			local line_to_hl = line_start + line_index - 1
 			local col_start = word_index - 1
-			local col_end = col_start + hl_end
+			local col_end = col_start
+
+			if Config.opts.use_syllable_algorithm then
+				col_end = col_start + Utils.highlight_on_first_syllable(word)
+			else
+				local hl_end = 0
+
+				-- offset tells us how many characters to highlight
+				local hl_offset = Config.opts.hl_offsets[word_length_str]
+
+				if hl_offset then
+					hl_end = hl_offset
+				else
+					hl_end = math.floor(word_length * Config.opts.hl_offsets["default"] + 0.5)
+				end
+
+				col_end = col_start + hl_end
+			end
 
 			-- Applies highlight to the word, zero based indexing
 			api.nvim_buf_add_highlight(bufnr, self.namespace, self.hl_group, line_to_hl, col_start, col_end)
