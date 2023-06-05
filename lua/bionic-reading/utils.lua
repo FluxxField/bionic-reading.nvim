@@ -48,67 +48,73 @@ function Utils.prompt_answer(input)
 	return false
 end
 
--- NOTE: syllables are made of 3 things: onset, nucleus, coda
--- We only care about the first nucleus (vowel) and the preceding onset (consonant/consonant cluster)
+local function is_vowel(char)
+	-- NOTE: y is a semi-vowel/consonant. To use or not to use?
+	local vowels = { "a", "e", "i", "o", "u" }
+
+	for _, vowel in ipairs(vowels) do
+		if char == vowel then
+			return true
+		end
+	end
+
+	return false
+end
+
+-- NOTE: syllables are made of 3 things: onset (before vowel), nucleus (vowel), coda (after vowel)
+-- We only care about the first nucleus and the preceding onset
 function Utils.highlight_on_first_syllable(word)
-	-- NOTE: y is a semi-vowel/consonant and cannot always be considered a vowel
-	local vowels = { a = true, e = true, i = true, o = true, u = true, y = true }
-	local coda_exceptions = { g = true }
+	local vowel_clusters = { "au", "ai", "ea", "ee", "ei", "eu", "ie", "io", "oa", "oe", "oi", "oo", "ou", "ue", "ui" }
+	local coda_exceptions = { "gh", "nd", "ld", "st" }
 
 	if word == nil or word == "" then
 		return 0
 	end
 
-	if #word <= 3 then
-		return 1
+	if #word <= 4 then
+		return math.floor(#word / 2)
 	end
 
-	for char_index = 1, #word do
-		local char = string.lower(word:sub(char_index, char_index))
-		local is_vowel = vowels[char] ~= nil
+	for cur_char_index = 1, #word do
+		local substring = string.lower(word:sub(cur_char_index, cur_char_index + 1))
 
-		-- find first vowel
-		if not is_vowel then
-			goto continue
-		else
-			-- if the first vowel is the last letter, we dont want to highlight the whole word
-			if char_index == #word then
-				return math.floor(#word / 2)
+		for _, combination in ipairs(vowel_clusters) do
+			-- a vowel cluster usually doesn't have a coda
+			if substring == combination then
+				if cur_char_index + 1 == #word then
+					return math.floor(#word / 2)
+				end
+
+				return cur_char_index + 1
 			end
 		end
 
-		-- coda is the consonant(s) that follow the nucleus
-		local coda = 1
-		local next_char_index = char_index + coda
-		local next_char = string.lower(word:sub(next_char_index, next_char_index))
-		local next_char_is_vowel = vowels[next_char] ~= nil
+		local char = string.lower(word:sub(cur_char_index, cur_char_index))
 
-		-- vowel cluster, no coda for vowel clusters (roughly) because onsets are greedy
-		if next_char_is_vowel then
-			-- we dont want to highlight the whole word
-			if next_char_index + coda == #word then
+		if is_vowel(char) then
+			-- if the first vowel is the last letter, we dont want to highlight the whole word
+			if cur_char_index == #word then
 				return math.floor(#word / 2)
 			end
 
-			return next_char_index
-		else
-			if coda_exceptions[next_char] ~= nil then
-				local second_coda_index = next_char_index + coda
+			-- coda is the consonant(s) that follow the nucleus
+			local coda = 1
+			local next_char_index = cur_char_index + coda
+			local next_char = string.lower(word:sub(next_char_index, next_char_index + 1))
 
-				if string.lower(word:sub(second_coda_index, second_coda_index)) == "h" then
+			-- check exceptions for coda
+			for _, exception in ipairs(coda_exceptions) do
+				if next_char == exception then
+					if next_char_index + 1 == #word then
+						return cur_char_index
+					end
+
 					coda = 2
 				end
 			end
 
-			-- we dont want to highlight the whole word
-			if char_index + coda == #word then
-				return math.floor(#word / 2)
-			end
-
-			return char_index + coda
+			return cur_char_index + coda
 		end
-
-		::continue::
 	end
 end
 
