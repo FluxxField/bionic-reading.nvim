@@ -1,6 +1,6 @@
 # bionic-reading.nvim
 
-Togglable and customizable bionic reading for Neovim using syllable detection for highlighting!@=
+Togglable and customizable bionic reading for Neovim using syllable based highlighting!
 
 ![demo gif](assets/bionic-reading-demo.gif)
 
