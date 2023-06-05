@@ -72,7 +72,7 @@ function Highlight:highlight(line_start, line_end)
 			local col_start = word_index - 1
 			local col_end = col_start
 
-			if Config.syllable_algorithm then
+			if Config.opts.syllable_algorithm then
 				col_end = col_start + Utils.highlight_on_first_syllable(word)
 			else
 				local hl_end = 0

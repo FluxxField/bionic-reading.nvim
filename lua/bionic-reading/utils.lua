@@ -51,14 +51,30 @@ end
 --- Check if character is a vowel
 --- @param char string
 --- @return boolean
-local function is_vowel(char)
-	-- NOTE: y is a semi-vowel/consonant. To use or not to use?
+local function is_vowel(char, char_index, word)
 	local vowels = { "a", "e", "i", "o", "u" }
+	local prev_char = nil
+
+	-- y is a special case, it can be a vowel or a consonant
+	-- y is a consonant when it is the first letter of a word
+	-- or precedes a vowel
+	if char == "y" then
+		prev_char = char
+		char = string.lower(word:sub(char_index + 1, char_index + 1))
+	end
 
 	for _, vowel in ipairs(vowels) do
 		if char == vowel then
+			if prev_char == "y" then
+				return false
+			end
+
 			return true
 		end
+	end
+
+	if prev_char == "y" then
+		return true
 	end
 
 	return false
@@ -96,14 +112,16 @@ function Utils.highlight_on_first_syllable(word)
 			end
 		end
 
-		if is_vowel(string.lower(word:sub(cur_char_index, cur_char_index))) then
+		-- coda is the consonant(s) that follow the nucleus
+		local coda = 1
+		local char = string.lower(word:sub(cur_char_index, cur_char_index))
+		local next_char_index = cur_char_index + coda
+
+		if is_vowel(char, cur_char_index, word) then
 			if cur_char_index == #word then
 				return math.floor(#word / 2)
 			end
 
-			-- coda is the consonant(s) that follow the nucleus
-			local coda = 1
-			local next_char_index = cur_char_index + coda
 			local next_chars = string.lower(word:sub(next_char_index, next_char_index + coda))
 
 			-- check exceptions for coda
