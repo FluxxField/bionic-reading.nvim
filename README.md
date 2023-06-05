@@ -4,6 +4,56 @@ Togglable and customizable bionic reading for Neovim!
 
 ![demo gif](assets/bionic-reading-demo.gif)
 
+## BETA - syllable_algorithm
+
+In the newest release I am happy to include my first attempt at syllable detection for my
+bionic-reading highlighting!
+
+This has been a fun challenge to tackle and is not perfect at. But, it is close and would
+like to share it with yall.
+
+First things first. What is a syllable? By definition a syllable is "a unit of pronunciation having
+one vowel sound, with or  without surrounding consonants, forming the whole or a part of a word".
+
+Why do we care about syllables? Great question! The reason we care about syllables is because they
+are the unit of organization of speech sounds. When learning to pronounce a new word, it is broken
+up into syllables. So, I figured this would be a great unit to base the highlighting off of.
+
+What makes a syllable? A syllable is made up of 3 things: A onset, a nucleus, and a coda.
+Onset - A consonant or consonant cluster
+Nucleus - Vowel or syllabic consonant
+Coda - A consonant or consonant cluster
+
+```
+Example:
+     Syllable
+    /    |   \
+Onset Nucleus Coda
+  c      a     t
+  s      i     ng
+```
+
+Challenge - Determining a syllable in a sea of characters
+First, we do not care about the onset for this problem. We want to find the first syllable which is
+denoted by the vowel. So, we start by looking for the first vowel in the word. We then check the word
+preceding it to determine if it is a vowel cluster. For the most part, vowel clusters dont usually
+have coda's (tails). So, we just highlight to the end of the cluster. Otherwise, highlight to the
+character preceding the first vowel. There are exceptions to these simple rules. For example the word
+`highlight`. The first syllable is `high`. So, we have a list of coda exceptions to check for and
+highlight to that point.
+
+There are of course edges to account for. If the word is 4 characters or less. We just highlight half
+rounded down. This also applies to the case that the first vowel is one of the last 2 characters. We
+do this so that we do not highlight a majority of the word.
+
+Future: I will continue to try and tweak and refine what I have started with. There is no set rules for
+determining a syllable so there will be missed cases
+
+Please Note: this is not perfect and might highlight incorrectly in some cases. I will try to update the
+exceptions as I find them. Thank you!
+
+You can read through the code [here](lua/bionic-reading/utils.lua)
+
 ## Features
  - No dependencies!
  - Custom highlighting amounts and highlighting style
@@ -107,7 +157,7 @@ Please see configuration and default options code [here](lua/bionic-reading/conf
   prompt_user = true,
 	saccade_cadence = 1,
   update_in_insert_mode = true,
-  use_syllable_algorithm = true,
+  syllable_algorithm = true,
 }
 ```
 
@@ -203,9 +253,9 @@ Flag used to dictate whether or not to update in insert mode
 
 Please see [Autocmds](#Autocmds) below for more info
 
-### use_syllable_algorithm
+### syllable_algorithm
 ```lua
-use_syllable_algorithm = true,
+syllable_algorithm = true,
 ```
 
 Flag used to dicate whether or not to use the syllable algorithm.
@@ -225,6 +275,7 @@ Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 - `:BRToggleUpdateInsertMode` toggles the update_in_insert_mode flag
 - `:BRToggleAutoHighlight` toggles the auto_highlight flag
 - `:BRSaccadeCadence {num}` used to set saccade_cadence outside of the config
+- `:BRToggleSyllableAlgorithm` used to toggle the syllable_algorithm flag
 
 ## Autocmds
 
