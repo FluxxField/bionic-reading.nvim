@@ -12,21 +12,28 @@ local Highlight = {
 }
 
 --- Clear all highlights in current buffer by clearing namespace
+--- @param line_start number
+--- @param line_end number
 --- @return nil
-function Highlight:clear()
+function Highlight:clear(line_start, line_end)
+	-- default to clear highlighting for all lines
+	if not line_start or not line_end then
+		line_start = 0
+		line_end = -1
+	end
+
 	local Buffers = require("bionic-reading.buffers")
 	local bufnr = api.nvim_get_current_buf()
 
 	Buffers:deactivate_buf(bufnr)
-	api.nvim_buf_clear_namespace(bufnr, self.namespace, 0, -1)
+	api.nvim_buf_clear_namespace(bufnr, self.namespace, line_start, line_end)
 end
 
 --- Highlight lines in current buffer
 --- @param line_start number
 --- @param line_end number
---- @param override boolean @clear all highlights before highlighting
 --- @return nil
-function Highlight:highlight(line_start, line_end, override)
+function Highlight:highlight(line_start, line_end)
 	local Buffers = require("bionic-reading.buffers")
 	local Config = require("bionic-reading.config")
 	local saccade_cadence = Config.opts.saccade_cadence
@@ -37,15 +44,11 @@ function Highlight:highlight(line_start, line_end, override)
 		line_end = -1
 	end
 
+	Highlight:clear(line_start, line_end)
+
 	local bufnr = api.nvim_get_current_buf()
 
-	-- clear all highlighting, used for saccade_cadence
-	-- NOTE: Could we clear highlighting by character instead of clearing all?
-	if override then
-		Highlight:clear()
-	elseif not override then
-		Buffers:activate_buf(bufnr)
-	end
+	Buffers:activate_buf(bufnr)
 
 	-- zero based indexing, end is exclusive
 	local lines = api.nvim_buf_get_lines(bufnr, line_start, line_end, false)

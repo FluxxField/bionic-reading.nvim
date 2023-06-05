@@ -37,7 +37,7 @@ function CMDS:_setup()
 				return
 			end
 
-			Highlight:highlight(0, -1, false)
+			Highlight:highlight(0, -1)
 		end,
 	})
 
@@ -46,16 +46,24 @@ function CMDS:_setup()
 		group = self.group,
 		callback = function(args)
 			local Buffers = require("bionic-reading.buffers")
+			local Config = require("bionic-reading.config")
 
 			if not Buffers:check_active_buf(args.buf) or not Utils.check_file_types() then
 				return
 			end
 
-			-- getpos returns an array of [bufnr, lnum, col, off], 1 based indexing
+			-- getpos returns an array of [bufnr, lnum, col, off], 1 based index
 			local line_start = vim.fn.getpos("'[")[2] - 1
 			local line_end = vim.fn.getpos("']")[2]
 
-			Highlight:highlight(line_start, line_end, false)
+			-- because the saccade_cadence is not one. Not every word will be highlighted
+			-- so, we need to re-highlight everything after the paste to make sure the
+			-- cadence is kept
+			if Config.opts.saccade_cadence ~= 1 then
+				line_end = -1
+			end
+
+			Highlight:highlight(line_start, line_end)
 		end,
 	})
 
@@ -75,9 +83,17 @@ function CMDS:_setup()
 			end
 
 			-- nvim_win_get_cursor returns an array of [lnum, col], 1 based indexing
-			local line_start = vim.api.nvim_win_get_cursor(0)[1]
+			local line_start = vim.api.nvim_win_get_cursor(0)[1] - 1
+			local line_end = line_start + 1
 
-			Highlight:highlight(line_start - 1, line_start, false)
+			-- because the saccade_cadence is not one. Not every word will be highlighted
+			-- so, we need to re-highlight everything after the paste to make sure the
+			-- cadence is kept
+			if Config.opts.saccade_cadence ~= 1 then
+				line_end = -1
+			end
+
+			Highlight:highlight(line_start, line_end)
 		end,
 	})
 
@@ -115,7 +131,7 @@ function CMDS:_setup()
 			Highlight:clear()
 		else
 			Utils.notify("BionicReading enabled", "info", "")
-			Highlight:highlight(0, -1, false)
+			Highlight:highlight(0, -1)
 		end
 	end, {})
 
@@ -127,7 +143,7 @@ function CMDS:_setup()
 
 		if success then
 			Utils.notify("Syllable algorithm is now " .. (new_value and "enabled" or "disabled"), "info", "")
-			Highlight:highlight(0, -1, true)
+			Highlight:highlight(0, -1)
 		end
 	end, {})
 
@@ -145,7 +161,7 @@ function CMDS:_setup()
 
 		if success then
 			Utils.notify("Saccade cadence is now " .. new_value, "info", "")
-			Highlight:highlight(0, -1, true)
+			Highlight:highlight(0, -1)
 		end
 	end, { nargs = 1 })
 

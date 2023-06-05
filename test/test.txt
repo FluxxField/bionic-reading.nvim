@@ -4,7 +4,6 @@
 function Utils.highlight_on_first_syllable(word)
 	local vowel_clusters = { "au", "ai", "ea", "ee", "ei", "eu", "ie", "io", "oa", "oe", "oi", "oo", "ou", "ue", "ui" }
 	local coda_exceptions = { "gh", "nd", "ld", "st" }
-
 	if word == nil or word == "" then
 		return 0
 	end
