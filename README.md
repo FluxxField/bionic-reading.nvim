@@ -20,7 +20,7 @@ Read more below in [Why Syllable Highlighting] (#why-syllable-highlighting)
 
 ![demo gif](assets/bionic-reading-demo.gif)
 
-## bionic-reading Table of Contents
+## BionicReading Table of Contents
 
 - [Features](#features)
 - [Getting Started](#getting-started)
@@ -187,30 +187,30 @@ Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 
 ## Why Syllable Highlighting
 
-Enhanced Word Recognition: Syllable highlighting helps break down words
+- **Enhanced Word Recognition**: Syllable highlighting helps break down words
 into smaller, more manageable units. By focusing on the first syllable,
 your eyes can quickly recognize and process the core of each word. This
 can be especially beneficial when dealing with long or unfamiliar terms.
 
-Improved Pronunciation: In many languages, pronunciation rules are often
+- **Improved Pronunciation**: In many languages, pronunciation rules are often
 tied to syllable boundaries. By highlighting the first syllable,
 bionic-reading assists with proper pronunciation. It guides your eyes to
 the starting point of each word, helping you sound out the syllables more
 accurately.
 
-Pattern Identification: Identifying patterns in language is essential for
+- **Pattern Identification**: Identifying patterns in language is essential for
 learning, writing, and editing. When you see words with the same highlighted
 syllables clustered together, it becomes easier to identify patterns and
 repetitions. This visual cue can be particularly useful for proofreading and
 making stylistic improvements in your writing.
 
-Mental Chunking: Chunking is a cognitive process where information is grouped
+- **Mental Chunking**: Chunking is a cognitive process where information is grouped
 into meaningful units. Highlighting syllables aids in chunking, allowing your
 brain to process and remember words more efficiently. By breaking down words
 into syllables, your mind can focus on smaller segments, making it easier to
 understand and retain information.
 
-Code Readability: When working with programming languages, developers often
+- **Code Readability**: When working with programming languages, developers often
 encounter complex variable names, function names, and class names. Highlighting
 the first syllable of these identifiers can help distinguish between similar
 terms, making code more readable and reducing the chances of errors caused by
