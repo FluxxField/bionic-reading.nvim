@@ -59,6 +59,10 @@ local function is_vowel(char, char_index, word)
 	-- y is a consonant when it is the first letter of a word
 	-- or precedes a vowel
 	if char == "y" then
+		if char_index == 1 then
+			return false
+		end
+
 		prev_char = char
 		char = string.lower(word:sub(char_index + 1, char_index + 1))
 	end
