@@ -16,7 +16,7 @@ linguistic studies and natural language processing techniques. The result is a
 fairly precise method for  identifying syllables within words, enabling accurate
 highlighting of their initial sounds
 
-Read more below in [Why Syllable Highlighting] (#why-syllable-highlighting)
+Read more below in [Why Syllable Highlighting](#why-syllable-highlighting)
 
 ![demo gif](assets/bionic-reading-demo.gif)
 
