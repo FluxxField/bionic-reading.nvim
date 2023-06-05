@@ -34,6 +34,7 @@ Onset Nucleus Coda
 ```
 
 Challenge - Determining a syllable in a sea of characters
+
 First, we do not care about the onset for this problem. We want to find the first syllable which is
 denoted by the vowel. So, we start by looking for the first vowel in the word. We then check the word
 preceding it to determine if it is a vowel cluster. For the most part, vowel clusters dont usually
@@ -47,7 +48,8 @@ rounded down. This also applies to the case that the first vowel is one of the l
 do this so that we do not highlight a majority of the word.
 
 Future: I will continue to try and tweak and refine what I have started with. There is no set rules for
-determining a syllable so there will be missed cases
+determining a syllable so there will be missed cases. I also am not handling cases for when "y" is
+treated as a vowel
 
 Please Note: this is not perfect and might highlight incorrectly in some cases. I will try to update the
 exceptions as I find them. Thank you!
