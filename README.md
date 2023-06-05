@@ -45,11 +45,11 @@ highlight to that point.
 
 There are of course edges to account for. If the word is 4 characters or less. We just highlight half
 rounded down. This also applies to the case that the first vowel is one of the last 2 characters. We
-do this so that we do not highlight a majority of the word.
+do this so that we do not highlight a majority of the word. We also need to account for situations where
+"y" is either a vowel or consonant.
 
 Future: I will continue to try and tweak and refine what I have started with. There is no set rules for
-determining a syllable so there will be missed cases. I also am not handling cases for when "y" is
-treated as a vowel
+determining a syllable so there will be missed cases.
 
 Please Note: this is not perfect and might highlight incorrectly in some cases. I will try to update the
 exceptions as I find them. Thank you!
