@@ -37,7 +37,7 @@ function CMDS:_setup()
 				return
 			end
 
-			Highlight:highlight(0, -1)
+			Highlight:highlight(0, -1, false)
 		end,
 	})
 
@@ -55,7 +55,7 @@ function CMDS:_setup()
 			local line_start = vim.fn.getpos("'[")[2] - 1
 			local line_end = vim.fn.getpos("']")[2]
 
-			Highlight:highlight(line_start, line_end)
+			Highlight:highlight(line_start, line_end, false)
 		end,
 	})
 
@@ -77,7 +77,7 @@ function CMDS:_setup()
 			-- nvim_win_get_cursor returns an array of [lnum, col], 1 based indexing
 			local line_start = vim.api.nvim_win_get_cursor(0)[1]
 
-			Highlight:highlight(line_start - 1, line_start)
+			Highlight:highlight(line_start - 1, line_start, false)
 		end,
 	})
 
@@ -99,7 +99,8 @@ function CMDS:_setup()
 			if not Utils.prompt_answer(input) then
 				Utils.notify(
 					"Cannot highlight current buffer.\nPlease add file type to your config if you would like to",
-					"error"
+					"error",
+					""
 				)
 
 				return
@@ -110,11 +111,23 @@ function CMDS:_setup()
 		end
 
 		if Buffers:check_active_buf(bufnr) then
-			Utils.notify("BionicReading disabled", "info")
+			Utils.notify("BionicReading disabled", "info", "")
 			Highlight:clear()
 		else
-			Utils.notify("BionicReading enabled", "info")
-			Highlight:highlight(0, -1)
+			Utils.notify("BionicReading enabled", "info", "")
+			Highlight:highlight(0, -1, false)
+		end
+	end, {})
+
+	create_user_command("BRToggleSyllableAlgorithm", function()
+		local Config = require("bionic-reading.config")
+		local new_value = not Config.opts.syllable_algorithm
+
+		local success = Config._update("syllable_algorithm", new_value)
+
+		if success then
+			Utils.notify("Syllable algorithm is now " .. (new_value and "enabled" or "disabled"), "info", "")
+			Highlight:highlight(0, -1, true)
 		end
 	end, {})
 
@@ -123,7 +136,7 @@ function CMDS:_setup()
 		local new_value = tonumber(opts.fargs[1])
 
 		if not new_value then
-			Utils.notify("Invalid value", "error")
+			Utils.notify("Invalid value", "error", "")
 
 			return
 		end
@@ -131,7 +144,7 @@ function CMDS:_setup()
 		local success = Config._update("saccade_cadence", new_value)
 
 		if success then
-			Utils.notify("Saccade cadence is now " .. new_value, "info")
+			Utils.notify("Saccade cadence is now " .. new_value, "info", "")
 			Highlight:highlight(0, -1, true)
 		end
 	end, { nargs = 1 })
@@ -143,7 +156,7 @@ function CMDS:_setup()
 		local success = Config._update("update_in_insert_mode", new_value)
 
 		if success then
-			Utils.notify("Update while in insert mode is now " .. (new_value and "enabled" or "disabled"), "info")
+			Utils.notify("Update while in insert mode is now " .. (new_value and "enabled" or "disabled"), "info", "")
 		end
 	end, {})
 
@@ -154,7 +167,7 @@ function CMDS:_setup()
 		local success = Config._update("auto_highlight", new_value)
 
 		if success then
-			Utils.notify("Auto highlight is now " .. (new_value and "enabled" or "disabled"), "info")
+			Utils.notify("Auto highlight is now " .. (new_value and "enabled" or "disabled"), "info", "")
 		end
 	end, {})
 end

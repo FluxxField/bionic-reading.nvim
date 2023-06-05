@@ -29,7 +29,7 @@ local defaults = {
 	prompt_user = true,
 	saccade_cadence = 1,
 	update_in_insert_mode = true,
-	use_syllable_algorithm = true, -- BETA
+	syllable_algorithm = true, -- BETA
 }
 
 --- Setup bionic-reading.nvim configuration
@@ -56,7 +56,7 @@ function Config._setup(opts)
 		prompt_user = { Config.opts.prompt_user, "boolean" },
 		saccade_cadence = { Config.opts.saccade_cadence, "number" },
 		update_in_insert_mode = { Config.opts.update_in_insert_mode, "boolean" },
-		use_syllable_algorithm = { Config.opts.use_syllable_algorithm, "boolean" },
+		syllable_algorithm = { Config.opts.syllable_algorithm, "boolean" },
 	})
 end
 
