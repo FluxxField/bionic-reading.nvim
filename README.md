@@ -32,6 +32,7 @@ Terminal -> Settings... -> Profiles -> Text -> enable "Use bold fonts"
  - Can enable/disable prompting ^
  - *NEW*: Added saccade_cadence to control how often words are highlighted
  - *NEW*: Added user command to set saccade_cadence
+ - *NEW*: Can now use a syllable algorithm to highlight the first syllable in a word
 
 ## TODO
 - [x] Add ability to toggle auto highlighting
@@ -41,8 +42,8 @@ Terminal -> Settings... -> Profiles -> Text -> enable "Use bold fonts"
 - [ ] Investigate treesitter highlighting
 - [x] Add saccade cadence
 - [x] Add user command to set saccade cadence
-- [ ] Add syllable algorithm
-- [ ] Expose highlight and clear
+- [x] Add syllable algorithm
+- [x] Expose highlight and clear
 - [ ] ????
 - [ ] Profit (Disclosure: meme)
 
@@ -106,6 +107,7 @@ Please see configuration and default options code [here](lua/bionic-reading/conf
   prompt_user = true,
 	saccade_cadence = 1,
   update_in_insert_mode = true,
+  use_syllable_algorithm = true,
 }
 ```
 
@@ -200,6 +202,17 @@ update_in_insert_mode = true,
 Flag used to dictate whether or not to update in insert mode
 
 Please see [Autocmds](#Autocmds) below for more info
+
+### use_syllable_algorithm
+```lua
+use_syllable_algorithm = true,
+```
+
+Flag used to dicate whether or not to use the syllable algorithm.
+
+The syllable algorithm is a BETA feature that finds the first syllable in a word and highlights it.
+Instead of just highlighting based off of word length (Default 40% of the word). This should make
+the highlighting more readable and blocked in a way that makes sense
 
 ## Commands
 
