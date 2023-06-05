@@ -46,14 +46,22 @@ function CMDS:_setup()
 		group = self.group,
 		callback = function(args)
 			local Buffers = require("bionic-reading.buffers")
+			local Config = require("bionic-reading.config")
 
 			if not Buffers:check_active_buf(args.buf) or not Utils.check_file_types() then
 				return
 			end
 
-			-- getpos returns an array of [bufnr, lnum, col, off], 1 based indexing
+			-- getpos returns an array of [bufnr, lnum, col, off], 1 based index
 			local line_start = vim.fn.getpos("'[")[2] - 1
 			local line_end = vim.fn.getpos("']")[2]
+
+			-- because the saccade_cadence is not one. Not every word will be highlighted
+			-- so, we need to re-highlight everything after the paste to make sure the
+			-- cadence is kept
+			if Config.opts.saccade_cadence ~= 1 then
+				line_end = -1
+			end
 
 			Highlight:highlight(line_start, line_end)
 		end,
@@ -75,9 +83,17 @@ function CMDS:_setup()
 			end
 
 			-- nvim_win_get_cursor returns an array of [lnum, col], 1 based indexing
-			local line_start = vim.api.nvim_win_get_cursor(0)[1]
+			local line_start = vim.api.nvim_win_get_cursor(0)[1] - 1
+			local line_end = line_start + 1
 
-			Highlight:highlight(line_start - 1, line_start)
+			-- because the saccade_cadence is not one. Not every word will be highlighted
+			-- so, we need to re-highlight everything after the paste to make sure the
+			-- cadence is kept
+			if Config.opts.saccade_cadence ~= 1 then
+				line_end = -1
+			end
+
+			Highlight:highlight(line_start, line_end)
 		end,
 	})
 
@@ -99,7 +115,8 @@ function CMDS:_setup()
 			if not Utils.prompt_answer(input) then
 				Utils.notify(
 					"Cannot highlight current buffer.\nPlease add file type to your config if you would like to",
-					"error"
+					"error",
+					""
 				)
 
 				return
@@ -110,10 +127,22 @@ function CMDS:_setup()
 		end
 
 		if Buffers:check_active_buf(bufnr) then
-			Utils.notify("BionicReading disabled", "info")
+			Utils.notify("BionicReading disabled", "info", "")
 			Highlight:clear()
 		else
-			Utils.notify("BionicReading enabled", "info")
+			Utils.notify("BionicReading enabled", "info", "")
+			Highlight:highlight(0, -1)
+		end
+	end, {})
+
+	create_user_command("BRToggleSyllableAlgorithm", function()
+		local Config = require("bionic-reading.config")
+		local new_value = not Config.opts.syllable_algorithm
+
+		local success = Config._update("syllable_algorithm", new_value)
+
+		if success then
+			Utils.notify("Syllable algorithm is now " .. (new_value and "enabled" or "disabled"), "info", "")
 			Highlight:highlight(0, -1)
 		end
 	end, {})
@@ -123,7 +152,7 @@ function CMDS:_setup()
 		local new_value = tonumber(opts.fargs[1])
 
 		if not new_value then
-			Utils.notify("Invalid value", "error")
+			Utils.notify("Invalid value", "error", "")
 
 			return
 		end
@@ -131,8 +160,8 @@ function CMDS:_setup()
 		local success = Config._update("saccade_cadence", new_value)
 
 		if success then
-			Utils.notify("Saccade cadence is now " .. new_value, "info")
-			Highlight:highlight(0, -1, true)
+			Utils.notify("Saccade cadence is now " .. new_value, "info", "")
+			Highlight:highlight(0, -1)
 		end
 	end, { nargs = 1 })
 
@@ -143,7 +172,7 @@ function CMDS:_setup()
 		local success = Config._update("update_in_insert_mode", new_value)
 
 		if success then
-			Utils.notify("Update while in insert mode is now " .. (new_value and "enabled" or "disabled"), "info")
+			Utils.notify("Update while in insert mode is now " .. (new_value and "enabled" or "disabled"), "info", "")
 		end
 	end, {})
 
@@ -154,7 +183,7 @@ function CMDS:_setup()
 		local success = Config._update("auto_highlight", new_value)
 
 		if success then
-			Utils.notify("Auto highlight is now " .. (new_value and "enabled" or "disabled"), "info")
+			Utils.notify("Auto highlight is now " .. (new_value and "enabled" or "disabled"), "info", "")
 		end
 	end, {})
 end
