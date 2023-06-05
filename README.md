@@ -22,15 +22,15 @@ Read more below in [Why Syllable Highlighting] (#why-syllable-highlighting)
 
 ## bionic-reading Table of Contents
 
-- [Features] (#features)
-- [Getting Started] (#getting-started)
-- [Installation] (#installation)
-- [Usage] (#usage)
-- [Customization] (#customization)
-- [Mappings] (#mappings)
-- [Vim Commands] (#vim-commands)
-- [TODO] (#todo)
-- [Why Syllable Highlighting] (#why-syllable-highlighting)
+- [Features](#features)
+- [Getting Started](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Customization](#customization)
+- [Mappings](#mappings)
+- [Vim Commands](#vim-commands)
+- [TODO](#todo)
+- [Why Syllable Highlighting](#why-syllable-highlighting)
 
 ## Features
  - No dependencies!
