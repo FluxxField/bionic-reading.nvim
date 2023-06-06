@@ -4,16 +4,19 @@ local initialized = false
 --- Highlight lines in current buffer
 --- @param line_start number
 --- @param line_end number
---- @param override boolean @clear all highlights before highlighting
+--- @param bufnr number
 --- @return nil
-function M.highlight(line_start, line_end, override)
-	require("bionic-reading.highlight"):highlight(line_start, line_end, override)
+function M.highlight(line_start, line_end, bufnr)
+	require("bionic-reading.highlight"):highlight(line_start, line_end, bufnr)
 end
 
 --- Clear all highlights in current buffer by clearing namespace
+--- @param line_start number
+--- @param line_end number
+--- @param bufnr number
 --- @return nil
-function M.clear()
-	require("bionic-reading.highlight"):clear()
+function M.clear(line_start, line_end, bufnr)
+	require("bionic-reading.highlight"):clear(line_start, line_end, bufnr)
 end
 
 --- Setup bionic-reading.nvim
