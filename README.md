@@ -20,6 +20,9 @@ Read more below in [Why Syllable Highlighting](#why-syllable-highlighting)
 
 ![demo gif](assets/bionic-reading-demo.gif)
 
+Font is [VictorMono](https://rubjo.github.io/victor-mono/) and my NeoVim setup uses
+[AstroNvim](https://astronvim.com/) with my config [here](https://github.com/FluxxField/astro_config)
+
 ## BionicReading Table of Contents
 
 - [Features](#features)
