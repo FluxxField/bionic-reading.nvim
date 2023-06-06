@@ -31,13 +31,14 @@ function CMDS:_setup()
 		callback = function(args)
 			local Buffers = require("bionic-reading.buffers")
 			local Config = require("bionic-reading.config")
+			local bufnr = args.buf
 
 			-- if buffer is active, we have already highlighted the file
-			if Buffers:check_active_buf(args.buf) or not Utils.check_file_types() or not Config.opts.auto_highlight then
+			if Buffers:check_active_buf(bufnr) or not Utils.check_file_types() or not Config.opts.auto_highlight then
 				return
 			end
 
-			Highlight:highlight(0, -1)
+			Highlight:highlight(0, -1, bufnr)
 		end,
 	})
 
@@ -47,8 +48,9 @@ function CMDS:_setup()
 		callback = function(args)
 			local Buffers = require("bionic-reading.buffers")
 			local Config = require("bionic-reading.config")
+			local bufnr = args.buf
 
-			if not Buffers:check_active_buf(args.buf) or not Utils.check_file_types() then
+			if not Buffers:check_active_buf(bufnr) or not Utils.check_file_types() then
 				return
 			end
 
@@ -63,7 +65,7 @@ function CMDS:_setup()
 				line_end = -1
 			end
 
-			Highlight:highlight(line_start, line_end)
+			Highlight:highlight(line_start, line_end, bufnr)
 		end,
 	})
 
@@ -73,11 +75,12 @@ function CMDS:_setup()
 		callback = function(args)
 			local Config = require("bionic-reading.config")
 			local Buffers = require("bionic-reading.buffers")
+			local bufnr = args.buf
 
 			if
-					not Buffers:check_active_buf(args.buf)
-					or not Config.opts.update_in_insert_mode
-					or not Utils.check_file_types()
+				not Buffers:check_active_buf(bufnr)
+				or not Config.opts.update_in_insert_mode
+				or not Utils.check_file_types()
 			then
 				return
 			end
@@ -93,14 +96,16 @@ function CMDS:_setup()
 				line_end = -1
 			end
 
-			Highlight:highlight(line_start, line_end)
+			Highlight:highlight(line_start, line_end, bufnr)
 		end,
 	})
 
-	create_user_command("BRToggle", function()
+	create_user_command("BRToggle", function(opts)
 		local Config = require("bionic-reading.config")
 		local Buffers = require("bionic-reading.buffers")
 		local bufnr = get_current_buf()
+		local line_start = opts.line1 or 0
+		local line_end = opts.line2 or -1
 
 		-- check if file type is in config
 		if not Utils.check_file_types() then
@@ -128,10 +133,10 @@ function CMDS:_setup()
 
 		if Buffers:check_active_buf(bufnr) then
 			Utils.notify("BionicReading disabled", "info", "")
-			Highlight:clear()
+			Highlight:clear(line_start, line_end, bufnr)
 		else
 			Utils.notify("BionicReading enabled", "info", "")
-			Highlight:highlight(0, -1)
+			Highlight:highlight(line_start, line_end, bufnr)
 		end
 	end, {})
 
@@ -143,7 +148,7 @@ function CMDS:_setup()
 
 		if success then
 			Utils.notify("Syllable algorithm is now " .. (new_value and "enabled" or "disabled"), "info", "")
-			Highlight:highlight(0, -1)
+			Highlight:highlight(0, -1, 0)
 		end
 	end, {})
 
@@ -161,7 +166,7 @@ function CMDS:_setup()
 
 		if success then
 			Utils.notify("Saccade cadence is now " .. new_value, "info", "")
-			Highlight:highlight(0, -1)
+			Highlight:highlight(0, -1, 0)
 		end
 	end, { nargs = 1 })
 
