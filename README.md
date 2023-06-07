@@ -5,7 +5,6 @@
  / /_/ / / /_/ / / / / / /__   / _, _/  __/ /_/ / /_/ / / / / / /_/ / 
 /_____/_/\____/_/ /_/_/\___/  /_/ |_|\___/\__,_/\__,_/_/_/ /_/\__, /  
                                                              /____/   
-	   · Syllable based highlight for Neovim! ·
 ```
 
 Togglable and customizable bionic reading for Neovim using syllable based highlighting!
