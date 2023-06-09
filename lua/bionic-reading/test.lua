@@ -1,0 +1,2 @@
+--- Clear all highlights in current buffer by clearing namespace
+--- Apply highlighting to buffer
