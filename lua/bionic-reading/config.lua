@@ -8,28 +8,25 @@ local Config = {}
 --- @field auto_highlight (boolean) Enable/disable auto-highlighting
 --- @field file_types (table) File types to enable auto-highlighting
 --- @field hl_group_value (table) Highlight group value
---- @field hl_offsets (table) Highlight offsets
 --- @field prompt_user (boolean) Enable/disable prompting user
---- @field saccade_cadence (number) Saccade cadence
+--- @field treesitter (boolean) Enable/disable treesitter
 --- @field update_in_insert_mode (boolean) Enable/disable updating in insert mode
---- @field use_syllable_algorithm (boolean) Enable/disable syllable algorithm
 local defaults = {
 	auto_highlight = true,
-	file_types = { "text" },
+	file_types = {
+		["text"] = {
+			"any",
+		},
+		["lua"] = {
+			"comment",
+		},
+	},
 	hl_group_value = {
 		link = "Bold",
 	},
-	hl_offsets = {
-		["1"] = 1,
-		["2"] = 1,
-		["3"] = 2,
-		["4"] = 2,
-		["default"] = 0.4,
-	},
 	prompt_user = true,
-	saccade_cadence = 1,
+	treesitter = true,
 	update_in_insert_mode = true,
-	syllable_algorithm = true, -- BETA
 }
 
 --- Setup bionic-reading.nvim configuration
@@ -52,11 +49,9 @@ function Config._setup(opts)
 		auto_highlight = { Config.opts.auto_highlight, "boolean" },
 		file_types = { Config.opts.file_types, "table" },
 		hl_group_value = { Config.opts.hl_group_value, "table" },
-		hl_offsets = { Config.opts.hl_offsets, "table" },
 		prompt_user = { Config.opts.prompt_user, "boolean" },
-		saccade_cadence = { Config.opts.saccade_cadence, "number" },
+		treesitter = { Config.opts.treesitter, "boolean" },
 		update_in_insert_mode = { Config.opts.update_in_insert_mode, "boolean" },
-		syllable_algorithm = { Config.opts.syllable_algorithm, "boolean" },
 	})
 end
 

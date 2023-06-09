@@ -9,7 +9,7 @@ function Utils.check_file_types()
 	local Config = require("bionic-reading.config")
 	local correct_file_type = false
 
-	for _, file_type in ipairs(Config.opts.file_types) do
+	for file_type, _ in pairs(Config.opts.file_types) do
 		if vim.bo.filetype == file_type then
 			correct_file_type = true
 			break
@@ -27,6 +27,9 @@ end
 function Utils.notify(content, type, fallback)
 	local has_notify, notify = pcall(require, "notify")
 	local title = "Bionic Reading"
+
+	type = type or "info"
+	fallback = fallback or nil
 
 	if has_notify then
 		notify.notify(content, type, {
@@ -97,6 +100,10 @@ function Utils.highlight_on_first_syllable(word)
 		return 0
 	end
 
+	if #word == 1 then
+		return 1
+	end
+
 	if #word <= 4 then
 		return math.floor(#word / 2)
 	end
@@ -144,6 +151,22 @@ function Utils.highlight_on_first_syllable(word)
 	end
 
 	return 1
+end
+
+local function _navigate_tree(node, callback)
+	local child_count = node:named_child_count()
+
+	if child_count ~= 0 then
+		for child, _ in node:iter_children() do
+			_navigate_tree(child, callback)
+		end
+	end
+
+	return callback(node)
+end
+
+function Utils.navigate_tree(node, callback)
+	_navigate_tree(node, callback)
 end
 
 return Utils
