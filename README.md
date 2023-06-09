@@ -7,13 +7,17 @@
                                                              /____/   
 ```
 
-Togglable and customizable bionic reading for Neovim using syllable based highlighting!
+Togglable and customizable bionic reading for Neovim using syllable based highlighting
+and TreeSitter!
 
 ## What is BionicReading?
 
 `bionic-reading.nvim` is a simple but powerful Neovim plugin designed to improve
 reading and writing efficiency. By highlighting the first syllable of each word,
-it aims to aid comprehension and to highlight on logical sections of the code
+it aims to aid comprehension and to highlight on logical sections of the code. By
+using the power of TreeSitter you have complete control over what is highlighted
+in your files. Just highlight comments? Sure! Strings? Of course! Function names?
+Why not! Or just highlight the whole file! The choice is yours
 
 ### Syllable Algorithm
 
@@ -44,7 +48,7 @@ Font is [VictorMono](https://rubjo.github.io/victor-mono/) and my NeoVim setup u
 
 ## Features
  - No dependencies!
- - Custom highlighting amounts and highlighting style
+ - Custom highlighting style
  - Toggable update while in insert mode
  - File types restricted
  - Highlighting stays after colorscheme changes
@@ -52,9 +56,8 @@ Font is [VictorMono](https://rubjo.github.io/victor-mono/) and my NeoVim setup u
  - Uses [nvim-notify](https://github.com/rcarriga/nvim-notify) for notifications if available 
  - Now prompts to highlight file if file type is not in your config
  - Can enable/disable prompting ^
- - *NEW*: Added saccade_cadence to control how often words are highlighted
- - *NEW*: Added user command to set saccade_cadence
- - *NEW*: Can now use a syllable algorithm to highlight the first syllable in a word
+ - *NEW*: Now use a syllable algorithm to highlight the first syllable in a word
+ - *NEW*: You can now highlight on node type thanks to treesitter!
 
 ## Getting Started
 
@@ -117,43 +120,50 @@ Example using lazy.nvim
       -- determines if the file types below will be
       -- automatically highlighted on buffer open
       auto_highlight = true,
-      -- the file types you want to highlight
-      file_types = { 'text' },
+      -- the file types you want to highlight with
+      -- the node types you would like to target
+      -- using treesitter
+      file_types = {
+        ["text"] = {
+            "any", -- highlight any node
+        },
+        -- EX: only highlights comments in lua files
+        ["lua"] = {
+            "comment",
+        },
+      },
       -- the highlighting styles applied
       -- IMPORTANT - if link is present, no other
       -- styles are applied
       hl_group_value = {
         link = "Bold",
       },
-      -- dictates the characters highlighted based
-      -- off of word length. key is word length and
-      -- value is the number of characters highlighted
-      -- note used if syllable_algorithm is on
-      hl_offsets = {
-        ['1'] = 1,
-	['2'] = 1,
-	['3'] = 2,
-	['4'] = 2,
-	['default'] = 0.4, -- defaults to 40% of the word
-      },
       -- Flag used to control if the user is prompted
       -- if BRToggle is called on a file type that is not
       -- explicitly defined above
       prompt_user = true,
-      -- The cadence of highlight word. Defaults to ever
-      -- word. Example: 2 would be every other word
-      saccade_cadence = 1,
-      -- Flag used to control if the highlighting is
-      -- applied while typing
+      -- Enable or disable the use of treesitter
+      treesitter = true,
+      -- Flag used to control if highlighting is applied as
+      -- you type
       update_in_insert_mode = true,
-      -- Flag used to dicate if the syllable_algorithm
-      -- is used. Highlights on syllables instead of 
-      -- characters based on word length. Disables the
-      -- use of hl_offset if on
-      syllable_algorithm = true,
     })
   end,
 }
+```
+
+### TreeSitter
+
+TreeSitter is used to target node types listed in your config above. This
+allows for BionicReading to highlight as much code or as little as you would
+like. For instance, the default config highlights only comments for Lua files.
+This allows you to tweak what is highlighted on a filetype bases.
+
+NOTE: you need to have a the language parser installed for TreeSitter to work
+
+```lua
+-- example
+:TSInstall lua
 ```
 
 ## Mappings
@@ -176,12 +186,6 @@ Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 
 " Toggles the auto_highlight flag
 :BRToggleAutoHighlight
-
-" Used to set the saccade_cadence
-:BRSaccadeCadence
-
-" Toggles the syllable_algorithm flag
-:BRToggleSyllableAlgorithm
 ```
 
 ## TODO
@@ -189,9 +193,7 @@ Please see autocmd code [here](lua/bionic-reading/cmds.lua)
 - [x] Add support for nvim-notify
 - [x] Prompt user to highlight file IF file type is not in config
 - [x] Add ability to toggle user prompt
-- [ ] Investigate treesitter highlighting
-- [x] Add saccade cadence
-- [x] Add user command to set saccade cadence
+- [x] Investigate treesitter highlighting
 - [x] Add syllable algorithm
 - [x] Expose highlight and clear
 - [ ] ????
