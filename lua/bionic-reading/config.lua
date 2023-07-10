@@ -14,11 +14,11 @@ local Config = {}
 local defaults = {
 	auto_highlight = true,
 	file_types = {
-		["text"] = {
-			"any",
+		['text'] = {
+			'all'
 		},
-		["lua"] = {
-			"comment",
+		['lua'] = {
+			'comment',
 		},
 	},
 	hl_group_value = {
@@ -37,7 +37,7 @@ function Config._setup(opts)
 
 	opts.hl_group_value = nil
 
-	Config.opts = vim.tbl_deep_extend("keep", opts or {}, defaults)
+	Config.opts = vim.tbl_deep_extend("force", defaults, opts or {})
 
 	-- explicitly set the highlight group value to make sure link is not kept
 	-- link overrides everything
@@ -79,7 +79,7 @@ function Config._update(key, value)
 			return false
 		end
 
-		Config.opts[key] = vim.tbl_deep_extend("keep", value, Config.opts[key])
+		Config.opts[key] = vim.tbl_deep_extend("force", Config.opts[key], value)
 	else
 		Config.opts[key] = value
 	end

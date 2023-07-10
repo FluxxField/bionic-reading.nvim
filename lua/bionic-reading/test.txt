@@ -1,0 +1,5 @@
+--- Highlight buffer using treesitter
+--- @param bufnr number
+--- @param line_start number
+--- @param line_end number
+--- @return boolean true if treesitter parser is available, false otherwise

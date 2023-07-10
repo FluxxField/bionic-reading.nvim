@@ -4,10 +4,11 @@ local api = vim.api
 
 --- Highlight class
 --- @module Highlight
-local Highlight = {}
+local Highlight = {
+	hl_group = "BionicReadingHL",
+	namespace = api.nvim_create_namespace("bionic_reading")
+}
 
-local namespace = api.nvim_create_namespace("bionic_reading")
-local hl_group = "BionicReadingHL"
 
 --- Apply highlighting to buffer
 --- @param bufnr number
@@ -29,7 +30,7 @@ local function _apply_highlighting(bufnr, line_start, line_end)
 
 			col_end = col_start + Utils.highlight_on_first_syllable(word)
 
-			api.nvim_buf_add_highlight(bufnr, namespace, hl_group, line_to_hl, col_start, col_end)
+			api.nvim_buf_add_highlight(bufnr, Highlight.namespace, Highlight.hl_group, line_to_hl, col_start, col_end)
 		end
 	end
 end
@@ -70,8 +71,10 @@ local function _treesitter_highlight(bufnr, line_start, line_end)
 	end
 
 	Utils.navigate_tree(root, function(node)
-		for _, node_type in ipairs(Config.opts.file_types[vim.bo.filetype]) do
-			if node_type == node:type() then
+		local config_node_types = Config.opts.file_types[vim.bo.filetype]
+
+		for _, node_type in ipairs(config_node_types) do
+			if node_type == 'all' or node_type == node:type() then
 				local row_start = node:range()
 
 				_apply_highlighting(bufnr, row_start, row_start + 1)
@@ -91,7 +94,7 @@ function Highlight.clear(bufnr)
 	bufnr = bufnr or api.nvim_get_current_buf()
 
 	Buffers:deactivate_buf(bufnr)
-	api.nvim_buf_clear_namespace(bufnr, namespace, 0, -1)
+	api.nvim_buf_clear_namespace(bufnr, Highlight.namespace, 0, -1)
 end
 
 --- Highlight lines in current buffer
@@ -127,7 +130,7 @@ end
 local function init()
 	local Config = require("bionic-reading.config")
 
-	api.nvim_set_hl(0, hl_group, Config.opts.hl_group_value)
+	api.nvim_set_hl(0, Highlight.hl_group, Config.opts.hl_group_value)
 end
 
 init()

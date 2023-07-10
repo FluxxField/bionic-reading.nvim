@@ -1,8 +1,3 @@
-local Highlight = require("bionic-reading.highlight")
-local Utils = require("bionic-reading.utils")
-
-local get_current_buf = vim.api.nvim_get_current_buf
-
 --- Commands module
 --- @module CMDS
 local CMDS = {}
@@ -11,6 +6,7 @@ local CMDS = {}
 --- @return nil
 function CMDS._set_hl_on_colorscheme()
 	local Config = require("bionic-reading.config")
+	local Highlight = require("bionic-reading.highlight")
 
 	vim.api.nvim_set_hl(0, Highlight.hl_group, Config.opts.hl_group_value)
 end
@@ -20,7 +16,9 @@ end
 function CMDS._highlight_on_filetype()
 	local Buffers = require("bionic-reading.buffers")
 	local Config = require("bionic-reading.config")
-	local bufnr = get_current_buf()
+	local Highlight = require("bionic-reading.highlight")
+	local Utils = require("bionic-reading.utils")
+	local bufnr = vim.api.nvim_get_current_buf()
 
 	-- if buffer is active, we have already highlighted the file
 	if Buffers:check_active_buf(bufnr) or not Utils.check_file_types() or not Config.opts.auto_highlight then
@@ -35,7 +33,9 @@ end
 function CMDS._highlight_on_textchanged()
 	local Buffers = require("bionic-reading.buffers")
 	local Config = require("bionic-reading.config")
-	local bufnr = get_current_buf()
+	local Highlight = require("bionic-reading.highlight")
+	local Utils = require("bionic-reading.utils")
+	local bufnr = vim.api.nvim_get_current_buf()
 
 	if not Buffers:check_active_buf(bufnr) or not Utils.check_file_types() or not Config.opts.update_in_insert_mode then
 		return
@@ -53,7 +53,9 @@ end
 function CMDS._highlight_on_textchangedI()
 	local Buffers = require("bionic-reading.buffers")
 	local Config = require("bionic-reading.config")
-	local bufnr = get_current_buf()
+	local Highlight = require("bionic-reading.highlight")
+	local Utils = require("bionic-reading.utils")
+	local bufnr = vim.api.nvim_get_current_buf()
 
 	if not Buffers:check_active_buf(bufnr) or not Config.opts.update_in_insert_mode or not Utils.check_file_types() then
 		return
@@ -71,7 +73,9 @@ end
 function CMDS._toggle()
 	local Config = require("bionic-reading.config")
 	local Buffers = require("bionic-reading.buffers")
-	local bufnr = get_current_buf()
+	local Highlight = require("bionic-reading.highlight")
+	local Utils = require("bionic-reading.utils")
+	local bufnr = vim.api.nvim_get_current_buf()
 
 	-- check if file type is in config
 	if not Utils.check_file_types() then
@@ -110,6 +114,7 @@ end
 --- @return nil
 function CMDS._toggle_update_insert_mode()
 	local Config = require("bionic-reading.config")
+	local Utils = require("bionic-reading.utils")
 	local new_value = not Config.opts.update_in_insert_mode
 
 	local success = Config._update("update_in_insert_mode", new_value)
@@ -123,6 +128,7 @@ end
 --- @return nil
 function CMDS._toggle_auto_highlight()
 	local Config = require("bionic-reading.config")
+	local Utils = require("bionic-reading.utils")
 	local new_value = not Config.opts.auto_highlight
 
 	local success = Config._update("auto_highlight", new_value)
