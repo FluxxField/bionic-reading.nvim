@@ -14,9 +14,9 @@ local Config = {}
 local defaults = {
 	auto_highlight = true,
 	file_types = {
-		['text'] = 'all',
-		['lua'] = {
-			'comment',
+		["text"] = "any",
+		["lua"] = {
+			"comment",
 		},
 	},
 	hl_group_value = {
@@ -45,7 +45,7 @@ function Config._setup(opts)
 
 	vim.validate({
 		auto_highlight = { Config.opts.auto_highlight, "boolean" },
-		file_types = { Config.opts.file_types, {"table", "string"} },
+		file_types = { Config.opts.file_types, { "table", "string" } },
 		hl_group_value = { Config.opts.hl_group_value, "table" },
 		prompt_user = { Config.opts.prompt_user, "boolean" },
 		treesitter = { Config.opts.treesitter, "boolean" },
