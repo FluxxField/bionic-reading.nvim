@@ -114,7 +114,7 @@ Example using lazy.nvim
 
 ```lua
 {
-  'FlexxField/bionic-reading.nvim',
+  'FluxxField/bionic-reading.nvim',
   config = function()
     require('bionic-reading').setup({
       -- determines if the file types below will be
@@ -124,19 +124,16 @@ Example using lazy.nvim
       -- the node types you would like to target
       -- using treesitter
       file_types = {
-        ["text"] = {
-            "any", -- highlight any node
-        },
+        ["text"] = "any" -- highlight any node
         -- EX: only highlights comments in lua files
         ["lua"] = {
             "comment",
         },
       },
-      -- the highlighting styles applied
-      -- IMPORTANT - if link is present, no other
-      -- styles are applied
+      -- the highlighting styles applied as val to nvim_set_hl()
+      -- Please see :help nvim_set_hl() to see vals that can be passed
       hl_group_value = {
-        link = "Bold",
+        bold = true
       },
       -- Flag used to control if the user is prompted
       -- if BRToggle is called on a file type that is not
