@@ -70,11 +70,18 @@ local function _treesitter_highlight(bufnr, line_start, line_end)
 		end
 	end
 
-	Utils.navigate_tree(root, function(node)
-		local config_node_types = Config.opts.file_types[vim.bo.filetype]
+	local filetype_node_types = Config.opts.file_types[vim.bo.filetype]
 
-		for _, node_type in ipairs(config_node_types) do
-			if node_type == 'all' or node_type == node:type() then
+	-- Early return, if node_type is 'any' then highlight to line_end
+	if type(filetype_node_types) == 'string' and filetype_node_types == 'any' then
+		_apply_highlighting(bufnr, line_start, line_end);
+
+		return true
+	end
+
+	Utils.navigate_tree(root, function(node)
+		for _, node_type in ipairs(filetype_node_types) do
+			if node_type == 'any' or node_type == node:type() then
 				local row_start = node:range()
 
 				_apply_highlighting(bufnr, row_start, row_start + 1)
