@@ -114,6 +114,33 @@ You need the language parser installed for TreeSitter to work:
 
 If TreeSitter is enabled but no parser is available for the current buffer, the plugin falls back to regex-based highlighting automatically.
 
+## Syllable Algorithm
+
+Most bionic reading tools take a shortcut: bold the first N characters of every word (typically half). This produces awkward results — `**str**ing` splits mid-syllable, `**thro**ugh` bolds into the vowel cluster, and short words like `**t**he` barely get touched.
+
+`bionic-reading.nvim` uses a custom syllable detection algorithm instead. It analyzes the actual structure of each word — onset, nucleus, and coda — to find where the first syllable ends, then highlights up to that point.
+
+### How it works
+
+1. **Short words** (1-4 characters) use a simple half-length rule since syllable boundaries aren't meaningful at that scale.
+2. **Vowel cluster detection** — The algorithm recognizes 15 common vowel pairs (`ea`, `ou`, `ai`, `oo`, etc.) and treats them as a single nucleus. This keeps clusters like the `eau` in "beautiful" or the `ou` in "through" from being split.
+3. **Consonant/vowel classification** — Each character is classified to locate the first nucleus. The letter `y` gets special handling: it's a consonant at the start of a word ("**y**ellow") but a vowel when it doesn't precede another vowel ("s**y**stem").
+4. **Coda exceptions** — Certain consonant pairs (`gh`, `nd`, `ld`, `st`) are included with the syllable when they follow the nucleus, matching natural pronunciation ("**stri**ng", not "**str**ing").
+5. **60% cap** — As a safety net, highlighting never exceeds 60% of the word length, preventing over-bolding on edge cases.
+
+### Comparison
+
+| Word | Fixed half | Syllable algorithm |
+|------|------------|--------------------|
+| `string` | **str**ing | **stri**ng |
+| `through` | **thro**ugh | **throu**gh |
+| `beautiful` | **beau**tiful | **beau**tiful |
+| `comment` | **com**ment | **com**ment |
+| `reading` | **rea**ding | **read**ing |
+| `yield` | **yie**ld | **yield** |
+
+The result is highlighting that follows how you actually read and pronounce words, not an arbitrary character count.
+
 ## Commands
 
 ```vim
