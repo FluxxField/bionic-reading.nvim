@@ -28,7 +28,73 @@ function M.setup(opts)
 
 	opts = opts or {}
 
-	require("bionic-reading.config")._setup(opts)
+	local Config = require("bionic-reading.config")
+	local Highlight = require("bionic-reading.highlight")
+	local CMDS = require("bionic-reading.cmds")
+	local Buffers = require("bionic-reading.buffers")
+
+	Config._setup(opts)
+
+	-- Set highlight group
+	vim.api.nvim_set_hl(0, Highlight.hl_group, Config.opts.hl_group_value)
+
+	-- Register autocmds
+	local augroup = vim.api.nvim_create_augroup("bionic_reading", { clear = true })
+
+	vim.api.nvim_create_autocmd("ColorScheme", {
+		group = augroup,
+		pattern = "*",
+		callback = function()
+			CMDS._set_hl_on_colorscheme()
+		end,
+	})
+
+	vim.api.nvim_create_autocmd("FileType", {
+		group = augroup,
+		pattern = "*",
+		callback = function()
+			CMDS._highlight_on_filetype()
+		end,
+	})
+
+	vim.api.nvim_create_autocmd("TextChanged", {
+		group = augroup,
+		pattern = "*",
+		callback = function()
+			vim.defer_fn(function()
+				CMDS._highlight_on_textchanged()
+			end, 0)
+		end,
+	})
+
+	vim.api.nvim_create_autocmd("TextChangedI", {
+		group = augroup,
+		pattern = "*",
+		callback = function()
+			CMDS._highlight_on_textchangedI()
+		end,
+	})
+
+	vim.api.nvim_create_autocmd("BufDelete", {
+		group = augroup,
+		pattern = "*",
+		callback = function(args)
+			Buffers:deactivate_buf(args.buf)
+		end,
+	})
+
+	-- Register user commands
+	vim.api.nvim_create_user_command("BRToggle", function()
+		CMDS._toggle()
+	end, {})
+
+	vim.api.nvim_create_user_command("BRToggleUpdateInsertMode", function()
+		CMDS._toggle_update_insert_mode()
+	end, {})
+
+	vim.api.nvim_create_user_command("BRToggleAutoHighlight", function()
+		CMDS._toggle_auto_highlight()
+	end, {})
 
 	initialized = true
 end

@@ -47,47 +47,54 @@ local function _treesitter_highlight(bufnr, line_start, line_end)
 	line_start = line_start or 0
 	line_end = line_end or vim.api.nvim_buf_line_count(bufnr)
 
-	local ok = pcall(vim.treesitter.get_parser, bufnr)
+	local ok, parser = pcall(vim.treesitter.get_parser, bufnr)
 
-	if not ok then
+	if not ok or not parser then
 		return false
-	end
-
-	-- pos is 0-indexed
-	local root = vim.treesitter.get_node({ bufnr = bufnr, pos = { line_start, line_end } })
-
-	if not root then
-		return false
-	end
-
-	-- Make sure we have the top-level node
-	if line_start == 0 and line_end == vim.api.nvim_buf_line_count(bufnr) then
-		local parent = root:parent()
-
-		while parent do
-			root = parent
-			parent = parent:parent()
-		end
 	end
 
 	local filetype_node_types = Config.opts.file_types[vim.bo.filetype]
 
 	-- Early return, if node_type is 'any' then highlight to line_end
 	if type(filetype_node_types) == 'string' and filetype_node_types == 'any' then
-		_apply_highlighting(bufnr, line_start, line_end);
-
+		_apply_highlighting(bufnr, line_start, line_end)
 		return true
 	end
 
-	Utils.navigate_tree(root, function(node)
-		for _, node_type in ipairs(filetype_node_types) do
-			if node_type == 'any' or node_type == node:type() then
-				local row_start = node:range()
-
-				_apply_highlighting(bufnr, row_start, row_start + 1)
-			end
+	-- Check for 'any' in the list
+	for _, node_type in ipairs(filetype_node_types) do
+		if node_type == 'any' then
+			_apply_highlighting(bufnr, line_start, line_end)
+			return true
 		end
-	end)
+	end
+
+	-- Build a treesitter query from configured node types
+	local query_parts = {}
+	for _, node_type in ipairs(filetype_node_types) do
+		table.insert(query_parts, "(" .. node_type .. ") @capture")
+	end
+	local query_string = table.concat(query_parts, "\n")
+
+	local trees = parser:parse()
+	if not trees or #trees == 0 then
+		return false
+	end
+	local root = trees[1]:root()
+
+	local lang = parser:lang()
+	local query_ok, query = pcall(vim.treesitter.query.parse, lang, query_string)
+
+	if not query_ok then
+		-- Invalid node type name; fall back to plain highlighting
+		_apply_highlighting(bufnr, line_start, line_end)
+		return true
+	end
+
+	for _, node in query:iter_captures(root, bufnr, line_start, line_end) do
+		local row_start = node:range()
+		_apply_highlighting(bufnr, row_start, row_start + 1)
+	end
 
 	return true
 end
@@ -133,13 +140,5 @@ function Highlight.highlight(bufnr, line_start, line_end)
 		_apply_highlighting(bufnr, line_start, line_end)
 	end
 end
-
-local function init()
-	local Config = require("bionic-reading.config")
-
-	api.nvim_set_hl(0, Highlight.hl_group, Config.opts.hl_group_value)
-end
-
-init()
 
 return Highlight

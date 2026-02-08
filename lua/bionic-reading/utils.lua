@@ -7,16 +7,8 @@ local Utils = {}
 --- @return boolean
 function Utils.check_file_types()
 	local Config = require("bionic-reading.config")
-	local correct_file_type = false
 
-	for file_type, _ in pairs(Config.opts.file_types) do
-		if vim.bo.filetype == file_type then
-			correct_file_type = true
-			break
-		end
-	end
-
-	return correct_file_type
+	return Config.opts.file_types[vim.bo.filetype] ~= nil
 end
 
 --- Send notification using nvim-notify, fallback to print
@@ -44,20 +36,17 @@ end
 --- @param input string
 --- @return boolean
 function Utils.prompt_answer(input)
-	if input == "y" or input == "Y" or input == "Yes" or input == "YES" then
-		return true
-	end
+	local lower = string.lower(input)
 
-	return false
+	return lower == "y" or lower == "yes"
 end
 
 --- Check if character is a vowel
 --- @param char string
 --- @return boolean
-local function is_vowel(char, char_index, word)
-	local vowels = { "a", "e", "i", "o", "u" }
-	local prev_char = nil
+local vowels = { a = true, e = true, i = true, o = true, u = true }
 
+local function is_vowel(char, char_index, word)
 	-- y is a special case, it can be a vowel or a consonant
 	-- y is a consonant when it is the first letter of a word
 	-- or precedes a vowel
@@ -66,25 +55,11 @@ local function is_vowel(char, char_index, word)
 			return false
 		end
 
-		prev_char = char
-		char = string.lower(word:sub(char_index + 1, char_index + 1))
+		local next_char = string.lower(word:sub(char_index + 1, char_index + 1))
+		return not vowels[next_char]
 	end
 
-	for _, vowel in ipairs(vowels) do
-		if char == vowel then
-			if prev_char == "y" then
-				return false
-			end
-
-			return true
-		end
-	end
-
-	if prev_char == "y" then
-		return true
-	end
-
-	return false
+	return vowels[char] == true
 end
 
 -- NOTE: syllables are made of 3 things: onset (before vowel), nucleus (vowel), coda (after vowel)
@@ -92,7 +67,7 @@ end
 --- Get the end index of the first syllable in a word
 --- @param word string
 --- @return number
-function Utils.highlight_on_first_syllable(word)
+local function _compute_first_syllable(word)
 	local vowel_clusters = { "au", "ai", "ea", "ee", "ei", "eu", "ie", "io", "oa", "oe", "oi", "oo", "ou", "ue", "ui" }
 	local coda_exceptions = { "gh", "nd", "ld", "st" }
 
@@ -153,20 +128,14 @@ function Utils.highlight_on_first_syllable(word)
 	return 1
 end
 
-local function _navigate_tree(node, callback)
-	local child_count = node:named_child_count()
+--- Get the end index of the first syllable in a word, capped at 60% of word length
+--- @param word string
+--- @return number
+function Utils.highlight_on_first_syllable(word)
+	local result = _compute_first_syllable(word)
+	local max_len = math.ceil(#(word or "") * 0.6)
 
-	if child_count ~= 0 then
-		for child, _ in node:iter_children() do
-			_navigate_tree(child, callback)
-		end
-	end
-
-	return callback(node)
-end
-
-function Utils.navigate_tree(node, callback)
-	_navigate_tree(node, callback)
+	return math.min(result, math.max(max_len, 1))
 end
 
 return Utils
