@@ -43,14 +43,12 @@ function Config._setup(opts)
 		Config.opts.hl_group_value = hl_group_value
 	end
 
-	vim.validate({
-		auto_highlight = { Config.opts.auto_highlight, "boolean" },
-		file_types = { Config.opts.file_types, { "table", "string" } },
-		hl_group_value = { Config.opts.hl_group_value, "table" },
-		prompt_user = { Config.opts.prompt_user, "boolean" },
-		treesitter = { Config.opts.treesitter, "boolean" },
-		update_in_insert_mode = { Config.opts.update_in_insert_mode, "boolean" },
-	})
+	vim.validate("auto_highlight", Config.opts.auto_highlight, "boolean")
+	vim.validate("file_types", Config.opts.file_types, { "table", "string" })
+	vim.validate("hl_group_value", Config.opts.hl_group_value, "table")
+	vim.validate("prompt_user", Config.opts.prompt_user, "boolean")
+	vim.validate("treesitter", Config.opts.treesitter, "boolean")
+	vim.validate("update_in_insert_mode", Config.opts.update_in_insert_mode, "boolean")
 end
 
 --- Update bionic-reading.nvim configuration
@@ -82,9 +80,7 @@ function Config._update(key, value)
 		Config.opts[key] = value
 	end
 
-	vim.validate({
-		key = { Config.opts[key], type(Config.opts[key]) },
-	})
+	vim.validate("key", Config.opts[key], type(Config.opts[key]))
 
 	return true
 end
